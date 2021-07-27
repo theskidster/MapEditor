@@ -147,6 +147,8 @@ public final class App {
         double delta = 0;
         boolean ticked;
         
+        
+        
         while(!glfwWindowShouldClose(window.handle)) {
             currTime = glfwGetTime();
             
