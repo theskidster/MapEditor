@@ -1,6 +1,7 @@
 package dev.theskidster.mapeditor.main;
 
 import dev.theskidster.jlogger.JLogger;
+import dev.theskidster.mapeditor.graphics.Color;
 import dev.theskidster.shadercore.BufferType;
 import dev.theskidster.shadercore.GLProgram;
 import dev.theskidster.shadercore.Shader;
@@ -17,8 +18,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.opengl.GL;
 import static org.lwjgl.opengl.GL20.*;
@@ -152,6 +151,7 @@ public final class App {
         double delta = 0;
         boolean ticked;
         
+        Font font = new Font("fnt_karla_regular.ttf", 24);
         Triangle triangle = new Triangle(0, 0, -5, 1);
         
         while(!glfwWindowShouldClose(window.handle)) {
@@ -232,6 +232,10 @@ public final class App {
             
             JLogger.logSevere("OpenGL Error: (" + glError + ") " + desc, null);
         }
+    }
+    
+    public static void setClearColor(Color color) {
+        glClearColor(color.r, color.g, color.b, 0);
     }
     
 }
