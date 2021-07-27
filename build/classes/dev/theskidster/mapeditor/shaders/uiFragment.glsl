@@ -23,5 +23,10 @@ void main() {
             if(texture(uTexture, ioTexCoords).a == 0) discard;
             ioResult = texture(uTexture, ioTexCoords) * vec4(uColor, 1);
             break;
+
+        case 3: //Used to draw font bitmap.
+            if(texture(uTexture, ioTexCoords).a == 0) discard;
+            ioResult = texture(uTexture, ioTexCoords);
+            break;
     }
 }

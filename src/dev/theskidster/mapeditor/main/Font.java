@@ -2,12 +2,14 @@ package dev.theskidster.mapeditor.main;
 
 import dev.theskidster.jlogger.JLogger;
 import dev.theskidster.mapeditor.graphics.Color;
+import dev.theskidster.mapeditor.graphics.Graphics;
+import dev.theskidster.shadercore.GLProgram;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
 import org.lwjgl.stb.STBTTAlignedQuad;
 import org.lwjgl.stb.STBTTBakedChar;
 import org.lwjgl.stb.STBTTFontinfo;
@@ -29,6 +31,8 @@ public class Font {
     
     private final float SCALE = 1.5f;
     
+    private Graphics g;
+    
     private final Map<Character, Glyph> glyphs = new HashMap<>();
     
     private final class Glyph {
@@ -38,6 +42,9 @@ public class Font {
     Font(String filename, int size) {
         texHandle = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texHandle);
+        
+        int bitmapWidth;
+        int bitmapHeight;
         
         try(InputStream file = Font.class.getResourceAsStream(App.ASSETS_PATH + filename)) {
             try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -60,8 +67,8 @@ public class Font {
                 int bitmapSizeInPixels = 128;
                 int exitStatus         = -1;
                 int extraCells         = -1;
-                int bitmapWidth        = 0;
-                int bitmapHeight       = 0;
+                bitmapWidth        = 0;
+                bitmapHeight       = 0;
                 
                 ByteBuffer imageBuf = MemoryUtil.memAlloc(bitmapWidth * bitmapHeight);
                 STBTTBakedChar.Buffer bakedCharBuf = STBTTBakedChar.malloc(charset.length());
@@ -119,8 +126,38 @@ public class Font {
                 
                 MemoryUtil.memFree(imageBuf);
                 MemoryUtil.memFree(fontBuf);
-                
             }
+            
+            //TODO: temp for drawing font bitmap
+            {
+                g = new Graphics();
+
+                try(MemoryStack stack = MemoryStack.stackPush()) {
+                    g.vertices = stack.mallocFloat(16);
+                    g.indices  = stack.mallocInt(6);
+
+                    //(vec3 position), (vec2 tex coords)
+                    g.vertices.put(0)          .put(bitmapHeight)   .put(0).put(0);
+                    g.vertices.put(bitmapWidth).put(bitmapHeight)   .put(1).put(0);
+                    g.vertices.put(bitmapWidth).put(0)              .put(1).put(1);
+                    g.vertices.put(0)          .put(0)              .put(0).put(1);
+
+                    g.indices.put(0).put(1).put(2);
+                    g.indices.put(2).put(3).put(0);
+
+                    g.vertices.flip();
+                    g.indices.flip();
+                }
+
+                g.bindBuffers();
+                
+                glVertexAttribPointer(0, 3, GL_FLOAT, false, (4 * Float.BYTES), 0);
+                glVertexAttribPointer(1, 2, GL_FLOAT, false, (4 * Float.BYTES), (2 * Float.BYTES));
+                
+                glEnableVertexAttribArray(0);
+                glEnableVertexAttribArray(1);
+            }
+            
         } catch(Exception e) {
             JLogger.setModule("core");
             JLogger.logSevere("Failed to load font \"" + filename + "\"", e);
@@ -128,8 +165,14 @@ public class Font {
         
     }
     
-    public void drawString(String text, int xPos, int yPos, Color color) {
+    public void drawString(String text, int xPos, int yPos, Color color, GLProgram uiProgram) {
+        glBindTexture(GL_TEXTURE_2D, texHandle);
+        glBindVertexArray(g.vao);
         
+        uiProgram.setUniform("uType", 3);
+        
+        glDrawElements(GL_TRIANGLES, g.indices.capacity(), GL_UNSIGNED_INT, 0);
+        App.checkGLError();
     }
     
 }

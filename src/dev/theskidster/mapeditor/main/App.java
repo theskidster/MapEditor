@@ -18,6 +18,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import org.joml.Matrix4f;
 import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.opengl.GL;
 import static org.lwjgl.opengl.GL20.*;
@@ -151,6 +152,9 @@ public final class App {
         double delta = 0;
         boolean ticked;
         
+        setClearColor(Color.WHITE);
+        Matrix4f projMatrix = new Matrix4f();
+        projMatrix.setOrtho(0, window.getWidth(), 0, window.getHeight(), 0, Integer.MAX_VALUE);
         Font font = new Font("fnt_karla_regular.ttf", 24);
         Triangle triangle = new Triangle(0, 0, -5, 1);
         
@@ -181,6 +185,10 @@ public final class App {
                 glViewport(0, 0, window.getWidth(), window.getHeight());
                 camera.render(sceneProgram);
                 triangle.render(sceneProgram);
+                
+                uiProgram.use();
+                uiProgram.setUniform("uProjection", false, projMatrix);
+                font.drawString("", 0, 0, Color.BLACK, uiProgram);
             }
             
             glfwSwapBuffers(window.handle);

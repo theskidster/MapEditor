@@ -21,5 +21,10 @@ void main() {
             ioTexCoords = aTexCoords + uTexCoords;
             gl_Position = uProjection * vec4(aPosition + uPosition, 0, 1);
             break;
+
+        case 3: //Used to draw font bitmap.
+            ioTexCoords = aTexCoords;
+            gl_Position = uProjection * vec4(aPosition, 0, 1);
+            break;
     }
 }
