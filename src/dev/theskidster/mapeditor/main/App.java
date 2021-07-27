@@ -35,9 +35,9 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public final class App {
 
-    private static int tickCount = 0;
+    private int tickCount = 0;
     
-    private static boolean vSync = true;
+    private boolean vSync = true;
     
     public static final String ASSETS_PATH = "/dev/theskidster/mapeditor/assets/";
     public static final String VERSION     = "0.0.0";
@@ -46,6 +46,7 @@ public final class App {
     private final Window window;
     private final GLProgram sceneProgram;
     private final GLProgram uiProgram;
+    private final Camera camera;
     
     /**
      * Initializes the applications dependencies.
@@ -135,28 +136,21 @@ public final class App {
             uiProgram.addUniform(BufferType.MAT4, "uProjection");
         }
         
+        camera = new Camera();
+        
     }
     
     /**
      * Exposes the window and begins running the application.
      */
     void start() {
-        window.show(monitor, vSync);
+        window.show(monitor, vSync, camera);
         
         final double TARGET_DELTA = 1 / 60.0;
         double prevTime = glfwGetTime();
         double currTime;
         double delta = 0;
         boolean ticked;
-        
-        Vector3f position  = new Vector3f();
-        Vector3f direction = new Vector3f(0, 0, -1);
-        Vector3f up        = new Vector3f(0, 1, 0);
-        Vector3f tempVec   = new Vector3f();
-        
-        Matrix4f viewMatrix = new Matrix4f();
-        Matrix4f projMatrix = new Matrix4f();
-        
         
         Triangle triangle = new Triangle(0, 0, -5, 1);
         
@@ -176,10 +170,7 @@ public final class App {
                 
                 glfwPollEvents();
                 
-                projMatrix.setPerspective((float) Math.toRadians(60f), 
-                                          (float) window.getWidth() / window.getHeight(), 
-                                          0.1f, 
-                                          Float.POSITIVE_INFINITY);
+                camera.update(window.getWidth(), window.getHeight());
                 triangle.update();
             }
             
@@ -188,9 +179,7 @@ public final class App {
             if(!window.getMinimized()) {
                 sceneProgram.use();
                 glViewport(0, 0, window.getWidth(), window.getHeight());
-                viewMatrix.setLookAt(position, position.add(direction, tempVec), up);
-                sceneProgram.setUniform("uView", false, viewMatrix);
-                sceneProgram.setUniform("uProjection", false, projMatrix);
+                camera.render(sceneProgram);
                 triangle.render(sceneProgram);
             }
             

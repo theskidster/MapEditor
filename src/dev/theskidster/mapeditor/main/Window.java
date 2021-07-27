@@ -26,6 +26,9 @@ final class Window {
     public final long handle;
     
     private boolean minimized;
+    private boolean mouseLeftHeld;
+    private boolean mouseMiddleHeld;
+    private boolean mouseRightHeld;
     
     final String title;
     
@@ -64,7 +67,7 @@ final class Window {
      * @param monitor the monitor the window will appear on
      * @param vSync   if true, vertical sync will be enabled
      */
-    void show(Monitor monitor, boolean vSync) {
+    void show(Monitor monitor, boolean vSync, Camera camera) {
         glfwSetWindowMonitor(handle, NULL, xPos, yPos, width, height, monitor.refreshRate);
         glfwSetWindowPos(handle, xPos, yPos);
         glfwSwapInterval((vSync) ? 1 : 0);
@@ -82,6 +85,31 @@ final class Window {
             
             minimized = (w == 0) && (h == 0);
             glViewport(0, 0, width, height);
+        });
+        
+        glfwSetCursorPosCallback(handle, (window, x, y) -> {
+            if(mouseLeftHeld ^ mouseMiddleHeld ^ mouseRightHeld) {
+                if(mouseMiddleHeld) camera.setPosition(x, y);
+                if(mouseRightHeld)  camera.setDirection(x, y);
+            } else {
+                camera.prevX = x;
+                camera.prevY = y;
+            }
+        });
+        
+        glfwSetMouseButtonCallback(handle, (window, button, action, mods) -> {
+            switch(button) {
+                case GLFW_MOUSE_BUTTON_LEFT -> {
+                    
+                }
+                
+                case GLFW_MOUSE_BUTTON_MIDDLE -> mouseMiddleHeld = (action == GLFW_PRESS);
+                case GLFW_MOUSE_BUTTON_RIGHT  -> mouseRightHeld = (action == GLFW_PRESS);
+            }
+        });
+        
+        glfwSetScrollCallback(handle, (window, xOffset, yOffset) -> {
+            camera.dolly((float) yOffset);
         });
     }
     
