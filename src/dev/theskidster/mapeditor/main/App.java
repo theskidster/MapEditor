@@ -1,6 +1,10 @@
 package dev.theskidster.mapeditor.main;
 
 import dev.theskidster.jlogger.JLogger;
+import dev.theskidster.shadercore.BufferType;
+import dev.theskidster.shadercore.GLProgram;
+import dev.theskidster.shadercore.Shader;
+import dev.theskidster.shadercore.ShaderCore;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -8,13 +12,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.util.LinkedList;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.opengl.GL;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 
 /**
  * Created: Jul 26, 2021
@@ -38,6 +43,7 @@ public final class App {
     
     private final Monitor monitor;
     private final Window window;
+    private final GLProgram uiProgram;
     
     /**
      * Initializes the applications dependencies.
@@ -82,14 +88,6 @@ public final class App {
         glfwMakeContextCurrent(window.handle);
         GL.createCapabilities();
         
-    }
-    
-    /**
-     * Exposes the window and begins running the application.
-     */
-    void start() {
-        window.show(monitor, vSync);
-        
         //Log system info.
         JLogger.newHorizontalLine();
         JLogger.logInfo("OS NAME:\t\t" + System.getProperty("os.name"));
@@ -98,6 +96,34 @@ public final class App {
         JLogger.logInfo("OPENGL VERSION:\t" + glGetString(GL_VERSION));
         JLogger.logInfo("APP VERSION:\t" + VERSION);
         JLogger.newHorizontalLine();
+        JLogger.newLine();
+        
+        ShaderCore.setFilepath("/dev/theskidster/mapeditor/shaders/");
+        
+        //Establish UI shaders.
+        {
+            var shaderSourceFiles = new LinkedList<Shader>() {{
+                add(new Shader("uiVertex.glsl", GL_VERTEX_SHADER));
+                add(new Shader("uiFragment.glsl", GL_FRAGMENT_SHADER));
+            }};
+            
+            uiProgram = new GLProgram(shaderSourceFiles, "ui");
+            uiProgram.use();
+            
+            uiProgram.addUniform(BufferType.INT,  "uType");
+            uiProgram.addUniform(BufferType.VEC2, "uTexCoords");
+            uiProgram.addUniform(BufferType.VEC2, "uPosition");
+            uiProgram.addUniform(BufferType.VEC3, "uColor");
+            uiProgram.addUniform(BufferType.MAT4, "uProjection");
+        }
+        
+    }
+    
+    /**
+     * Exposes the window and begins running the application.
+     */
+    void start() {
+        window.show(monitor, vSync);
         
         final double TARGET_DELTA = 1 / 60.0;
         double prevTime = glfwGetTime();
