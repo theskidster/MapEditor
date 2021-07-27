@@ -27,16 +27,25 @@ import org.lwjgl.system.MemoryUtil;
  */
 public class Font {
 
+    private final int FLOATS_PER_GLYPH = 24;
+    
     private final int texHandle;
+    private final int vao = glGenVertexArrays();
+    private final int vbo = glGenBuffers();
     
     private final float SCALE = 1.5f;
-    
-    private Graphics g;
     
     private final Map<Character, Glyph> glyphs = new HashMap<>();
     
     private final class Glyph {
+        int advance;
+        int width;
+        int height;
         
+        float s0;
+        float s1;
+        float t0;
+        float t1;
     }
     
     Font(String filename, int size) {
@@ -103,15 +112,24 @@ public class Font {
                     
                     stbtt_GetBakedQuad(bakedCharBuf, bitmapWidth, bitmapHeight, i, xPosBuf, yPosBuf, quad, true);
                     
+                    Glyph glyph = new Glyph();
+                    STBTTBakedChar bakedChar = bakedCharBuf.get(i);
+                    
+                    glyph.advance = (int) bakedChar.xadvance();
+                    glyph.width   = (bakedChar.x1() - bakedChar.x0());
+                    glyph.height  = (bakedChar.y1() - bakedChar.y0());
+                    glyph.s0      = quad.s0();
+                    glyph.s1      = quad.s1();
+                    glyph.t0      = quad.t0();
+                    glyph.t1      = quad.t1();
+                    
+                    glyphs.put(charset.charAt(i), glyph);
+                    
+                    
                     System.out.println(charset.charAt(i));
-                    System.out.println("s0: " + quad.s0());
-                    System.out.println("s1: " + quad.s1());
-                    System.out.println("t0: " + quad.t0());
-                    System.out.println("t1: " + quad.t1());
-                    System.out.println("x0: " + quad.x0());
-                    System.out.println("x1: " + quad.x1());
-                    System.out.println("y0: " + quad.y0());
-                    System.out.println("y1: " + quad.y1());
+                    System.out.println("xOff: " + bakedCharBuf.get(i).xoff());
+                    System.out.println("yOff: " + (bakedCharBuf.get(i).yoff()));
+                    System.out.println("advance: " + ((int) bakedCharBuf.get(i).xadvance()));
                     System.out.println();
                     
                     MemoryUtil.memFree(xPosBuf);
@@ -128,35 +146,16 @@ public class Font {
                 MemoryUtil.memFree(fontBuf);
             }
             
-            //TODO: temp for drawing font bitmap
-            {
-                g = new Graphics();
-
-                try(MemoryStack stack = MemoryStack.stackPush()) {
-                    g.vertices = stack.mallocFloat(16);
-                    g.indices  = stack.mallocInt(6);
-
-                    //(vec3 position), (vec2 tex coords)
-                    g.vertices.put(0)          .put(bitmapHeight)   .put(0).put(0);
-                    g.vertices.put(bitmapWidth).put(bitmapHeight)   .put(1).put(0);
-                    g.vertices.put(bitmapWidth).put(0)              .put(1).put(1);
-                    g.vertices.put(0)          .put(0)              .put(0).put(1);
-
-                    g.indices.put(0).put(1).put(2);
-                    g.indices.put(2).put(3).put(0);
-
-                    g.vertices.flip();
-                    g.indices.flip();
-                }
-
-                g.bindBuffers();
-                
-                glVertexAttribPointer(0, 3, GL_FLOAT, false, (4 * Float.BYTES), 0);
-                glVertexAttribPointer(1, 2, GL_FLOAT, false, (4 * Float.BYTES), (2 * Float.BYTES));
-                
-                glEnableVertexAttribArray(0);
-                glEnableVertexAttribArray(1);
-            }
+            glBindVertexArray(vao);
+            
+            glBindBuffer(GL_ARRAY_BUFFER, vbo);
+            glBufferData(GL_ARRAY_BUFFER, FLOATS_PER_GLYPH * Float.BYTES, GL_DYNAMIC_DRAW);
+            
+            glVertexAttribPointer(0, 2, GL_FLOAT, false, (4 * Float.BYTES), 0);
+            glVertexAttribPointer(1, 2, GL_FLOAT, false, (4 * Float.BYTES), (2 * Float.BYTES));
+            
+            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
             
         } catch(Exception e) {
             JLogger.setModule("core");
@@ -166,12 +165,49 @@ public class Font {
     }
     
     public void drawString(String text, int xPos, int yPos, Color color, GLProgram uiProgram) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+        glBindVertexArray(vao);
         glBindTexture(GL_TEXTURE_2D, texHandle);
-        glBindVertexArray(g.vao);
         
-        uiProgram.setUniform("uType", 3);
+        uiProgram.setUniform("uType", 0);
+        uiProgram.setUniform("uColor", color.asVec3());
         
-        glDrawElements(GL_TRIANGLES, g.indices.capacity(), GL_UNSIGNED_INT, 0);
+        for(char c : text.toCharArray()) {
+            Glyph g = glyphs.get(c);
+            
+            float x  = xPos;
+            float y  = yPos;
+            float w  = glyphs.get(c).width;
+            float h  = glyphs.get(c).height;
+            float s0 = glyphs.get(c).s0;
+            float s1 = glyphs.get(c).s1;
+            float t0 = glyphs.get(c).t0;
+            float t1 = glyphs.get(c).t1;
+            
+            try(MemoryStack stack = MemoryStack.stackPush()) {
+                FloatBuffer vertexBuf = stack.mallocFloat(FLOATS_PER_GLYPH);
+                
+                //(vec2 position), (vec2 texCoords)
+                vertexBuf.put(x)    .put(y)        .put(s0).put(t1);
+                vertexBuf.put(x)    .put(y + h)    .put(s0).put(t0);
+                vertexBuf.put(x + w).put(y + h)    .put(s1).put(t0);
+                vertexBuf.put(x)    .put(y)        .put(s0).put(t1);
+                vertexBuf.put(x + w).put(y + h)    .put(s1).put(t0);
+                vertexBuf.put(x + w).put(y)        .put(s1).put(t1);
+                
+                vertexBuf.flip();
+                
+                glBindBuffer(GL_ARRAY_BUFFER, vbo);
+                glBufferSubData(GL_ARRAY_BUFFER, 0, vertexBuf);
+            }
+            
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            xPos += g.advance;
+        }
+        
+        glDisable(GL_BLEND);
         App.checkGLError();
     }
     

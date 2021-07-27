@@ -130,8 +130,6 @@ public final class App {
             uiProgram.use();
             
             uiProgram.addUniform(BufferType.INT,  "uType");
-            uiProgram.addUniform(BufferType.VEC2, "uTexCoords");
-            uiProgram.addUniform(BufferType.VEC2, "uPosition");
             uiProgram.addUniform(BufferType.VEC3, "uColor");
             uiProgram.addUniform(BufferType.MAT4, "uProjection");
         }
@@ -188,7 +186,8 @@ public final class App {
                 
                 uiProgram.use();
                 uiProgram.setUniform("uProjection", false, projMatrix);
-                font.drawString("", 0, 0, Color.BLACK, uiProgram);
+                font.drawString("The quick brown fox jumped over the lazy dog.", 40, 100, Color.RED, uiProgram);
+                //font.drawBitmap(uiProgram);
             }
             
             glfwSwapBuffers(window.handle);
