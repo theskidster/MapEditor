@@ -44,6 +44,7 @@ public final class App {
     private final Monitor monitor;
     private final Window window;
     private final GLProgram uiProgram;
+    private final UI ui;
     
     /**
      * Initializes the applications dependencies.
@@ -51,8 +52,9 @@ public final class App {
     App() {
         glfwInit();
         
-        int windowWidth  = 1200;
-        int windowHeight = 800;
+        int windowWidth     = 1200;
+        int windowHeight    = 800;
+        String fontFilename = "fnt_karla_regular.ttf";
         
         //Import user preferences.
         try {
@@ -66,6 +68,7 @@ public final class App {
                             vSync        = Boolean.parseBoolean(xmlReader.getAttributeValue(null, "vSync"));
                             windowWidth  = Integer.parseInt(xmlReader.getAttributeValue(null, "windowWidth"));
                             windowHeight = Integer.parseInt(xmlReader.getAttributeValue(null, "windowHeight"));
+                            fontFilename = xmlReader.getAttributeValue(null, "fontFilename");
                         }
                     }
                     
@@ -117,6 +120,7 @@ public final class App {
             uiProgram.addUniform(BufferType.MAT4, "uProjection");
         }
         
+        ui = new UI(window, fontFilename);
     }
     
     /**
@@ -151,7 +155,11 @@ public final class App {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
             if(!window.getMinimized()) {
+                //TODO: render scene
                 
+                uiProgram.use();
+                glViewport(0, 0, window.getWidth(), window.getHeight());
+                ui.render(uiProgram);
             }
             
             glfwSwapBuffers(window.handle);
@@ -173,7 +181,9 @@ public final class App {
                       .append("windowHeight=\"")
                       .append(window.getHeight() + "\" ")
                       .append("vSync=\"")
-                      .append(vSync + "\">")
+                      .append(vSync + "\" ")
+                      .append("fontFilename=\"")
+                      .append(ui.getFontFilename() + "\">")
                       .append("</config>");
             }
         } catch(IOException e) {
@@ -182,6 +192,8 @@ public final class App {
             JLogger.setModule(null);
         }
         
+        GL.destroy();
+        glfwTerminate();
     }
     
 }

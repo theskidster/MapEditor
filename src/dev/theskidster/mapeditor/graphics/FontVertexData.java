@@ -1,4 +1,4 @@
-package dev.theskidster.mapeditor.ui;
+package dev.theskidster.mapeditor.graphics;
 
 /**
  * Created: Jul 26, 2021
@@ -8,6 +8,6 @@ package dev.theskidster.mapeditor.ui;
  * @author J Hoffman
  * @since  
  */
-public class UI {
+class FontVertexData {
 
 }

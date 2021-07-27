@@ -16,7 +16,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * @author J Hoffman
  * @since  0.0.0
  */
-public final class Window {
+final class Window {
 
     private int xPos;
     private int yPos;
