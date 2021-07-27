@@ -37,12 +37,12 @@ public final class App {
     
     private static boolean vSync = true;
     
-    public static final Path   PWD     = Path.of("").toAbsolutePath();
-    public static final String DOMAIN  = "mapeditor";
-    public static final String VERSION = "0.0.0";
+    public static final String ASSETS_PATH = "/dev/theskidster/mapeditor/assets/";
+    public static final String VERSION     = "0.0.0";
     
     private final Monitor monitor;
     private final Window window;
+    private final GLProgram sceneProgram;
     private final GLProgram uiProgram;
     
     /**
@@ -51,13 +51,12 @@ public final class App {
     App() {
         glfwInit();
         
-        int windowWidth     = 1200;
-        int windowHeight    = 800;
-        String fontFilename = "fnt_karla_regular.ttf";
+        int windowWidth  = 1200;
+        int windowHeight = 800;
         
         //Import user preferences.
         try {
-            InputStream stream = new FileInputStream(PWD + "/usrpref.cfg");
+            InputStream stream = new FileInputStream(Path.of("").toAbsolutePath() + "/usrpref.cfg");
             XMLStreamReader xmlReader = XMLInputFactory.newInstance().createXMLStreamReader(stream);
             
             while(xmlReader.hasNext()) {
@@ -67,7 +66,6 @@ public final class App {
                             vSync        = Boolean.parseBoolean(xmlReader.getAttributeValue(null, "vSync"));
                             windowWidth  = Integer.parseInt(xmlReader.getAttributeValue(null, "windowWidth"));
                             windowHeight = Integer.parseInt(xmlReader.getAttributeValue(null, "windowHeight"));
-                            fontFilename = xmlReader.getAttributeValue(null, "fontFilename");
                         }
                     }
                     
@@ -101,6 +99,22 @@ public final class App {
         JLogger.newLine();
         
         ShaderCore.setFilepath("/dev/theskidster/mapeditor/shaders/");
+        
+        //Establish scene shaders.
+        {
+            var shaderSourceFiles = new LinkedList<Shader>() {{
+                add(new Shader("sceneVertex.glsl", GL_VERTEX_SHADER));
+                add(new Shader("sceneFragment.glsl", GL_FRAGMENT_SHADER));
+            }};
+            
+            sceneProgram = new GLProgram(shaderSourceFiles, "scene");
+            sceneProgram.use();
+            
+            sceneProgram.addUniform(BufferType.INT,  "uType");
+            sceneProgram.addUniform(BufferType.MAT4, "uModel");
+            sceneProgram.addUniform(BufferType.MAT4, "uView");
+            sceneProgram.addUniform(BufferType.MAT4, "uProjection");
+        }
         
         //Establish UI shaders.
         {
