@@ -17,6 +17,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.opengl.GL;
 import static org.lwjgl.opengl.GL20.*;
@@ -147,7 +149,16 @@ public final class App {
         double delta = 0;
         boolean ticked;
         
+        Vector3f position  = new Vector3f();
+        Vector3f direction = new Vector3f(0, 0, -1);
+        Vector3f up        = new Vector3f(0, 1, 0);
+        Vector3f tempVec   = new Vector3f();
         
+        Matrix4f viewMatrix = new Matrix4f();
+        Matrix4f projMatrix = new Matrix4f();
+        
+        
+        Triangle triangle = new Triangle(0, 0, -5, 1);
         
         while(!glfwWindowShouldClose(window.handle)) {
             currTime = glfwGetTime();
@@ -164,16 +175,23 @@ public final class App {
                 tickCount = (tickCount == Integer.MAX_VALUE) ? 0 : tickCount + 1;
                 
                 glfwPollEvents();
+                
+                projMatrix.setPerspective((float) Math.toRadians(60f), 
+                                          (float) window.getWidth() / window.getHeight(), 
+                                          0.1f, 
+                                          Float.POSITIVE_INFINITY);
+                triangle.update();
             }
             
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
             if(!window.getMinimized()) {
-                //TODO: render scene
-                
-                uiProgram.use();
+                sceneProgram.use();
                 glViewport(0, 0, window.getWidth(), window.getHeight());
-                //ui.render(uiProgram);
+                viewMatrix.setLookAt(position, position.add(direction, tempVec), up);
+                sceneProgram.setUniform("uView", false, viewMatrix);
+                sceneProgram.setUniform("uProjection", false, projMatrix);
+                triangle.render(sceneProgram);
             }
             
             glfwSwapBuffers(window.handle);
@@ -206,6 +224,25 @@ public final class App {
         
         GL.destroy();
         glfwTerminate();
+    }
+    
+    public static void checkGLError() {
+        int glError = glGetError();
+        
+        if(glError != GL_NO_ERROR) {
+            String desc = "";
+            
+            switch(glError) {
+                case GL_INVALID_ENUM      -> desc = "invalid enum";
+                case GL_INVALID_VALUE     -> desc = "invalid value";
+                case GL_INVALID_OPERATION -> desc = "invalid operation";
+                case GL_STACK_OVERFLOW    -> desc = "stack overflow";
+                case GL_STACK_UNDERFLOW   -> desc = "stack underflow";
+                case GL_OUT_OF_MEMORY     -> desc = "out of memory";
+            }
+            
+            JLogger.logSevere("OpenGL Error: (" + glError + ") " + desc, null);
+        }
     }
     
 }
