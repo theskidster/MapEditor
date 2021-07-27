@@ -44,7 +44,6 @@ public final class App {
     private final Monitor monitor;
     private final Window window;
     private final GLProgram uiProgram;
-    private final UI ui;
     
     /**
      * Initializes the applications dependencies.
@@ -120,7 +119,6 @@ public final class App {
             uiProgram.addUniform(BufferType.MAT4, "uProjection");
         }
         
-        ui = new UI(window, fontFilename);
     }
     
     /**
@@ -159,7 +157,7 @@ public final class App {
                 
                 uiProgram.use();
                 glViewport(0, 0, window.getWidth(), window.getHeight());
-                ui.render(uiProgram);
+                //ui.render(uiProgram);
             }
             
             glfwSwapBuffers(window.handle);
@@ -181,9 +179,7 @@ public final class App {
                       .append("windowHeight=\"")
                       .append(window.getHeight() + "\" ")
                       .append("vSync=\"")
-                      .append(vSync + "\" ")
-                      .append("fontFilename=\"")
-                      .append(ui.getFontFilename() + "\">")
+                      .append(vSync + "\">")
                       .append("</config>");
             }
         } catch(IOException e) {
