@@ -2,11 +2,11 @@ package dev.theskidster.mapeditor.main;
 
 import dev.theskidster.jlogger.JLogger;
 import dev.theskidster.mapeditor.graphics.Color;
-import dev.theskidster.mapeditor.graphics.Graphics;
 import dev.theskidster.shadercore.GLProgram;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import static org.lwjgl.opengl.GL30.*;
@@ -41,6 +41,8 @@ public class Font {
         int advance;
         int width;
         int height;
+        int bearingX;
+        int bearingY;
         
         float s0;
         float s1;
@@ -51,9 +53,6 @@ public class Font {
     Font(String filename, int size) {
         texHandle = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texHandle);
-        
-        int bitmapWidth;
-        int bitmapHeight;
         
         try(InputStream file = Font.class.getResourceAsStream(App.ASSETS_PATH + filename)) {
             try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -76,8 +75,8 @@ public class Font {
                 int bitmapSizeInPixels = 128;
                 int exitStatus         = -1;
                 int extraCells         = -1;
-                bitmapWidth        = 0;
-                bitmapHeight       = 0;
+                int bitmapWidth        = 0;
+                int bitmapHeight       = 0;
                 
                 ByteBuffer imageBuf = MemoryUtil.memAlloc(bitmapWidth * bitmapHeight);
                 STBTTBakedChar.Buffer bakedCharBuf = STBTTBakedChar.malloc(charset.length());
@@ -107,30 +106,36 @@ public class Font {
                 for(int i = 0; i < charset.length(); i++) {
                     STBTTAlignedQuad quad = STBTTAlignedQuad.callocStack(stack);
                     
-                    FloatBuffer xPosBuf = MemoryUtil.memAllocFloat(1);
-                    FloatBuffer yPosBuf = MemoryUtil.memAllocFloat(1);
+                    FloatBuffer xPosBuf  = MemoryUtil.memAllocFloat(1);
+                    FloatBuffer yPosBuf  = MemoryUtil.memAllocFloat(1);
+                    IntBuffer advanceBuf = MemoryUtil.memAllocInt(1);
+                    IntBuffer bearingBuf = MemoryUtil.memAllocInt(1);
                     
                     stbtt_GetBakedQuad(bakedCharBuf, bitmapWidth, bitmapHeight, i, xPosBuf, yPosBuf, quad, true);
+                    stbtt_GetGlyphHMetrics(info, i, advanceBuf, bearingBuf);
                     
                     Glyph glyph = new Glyph();
                     STBTTBakedChar bakedChar = bakedCharBuf.get(i);
                     
-                    glyph.advance = (int) bakedChar.xadvance();
-                    glyph.width   = (bakedChar.x1() - bakedChar.x0());
-                    glyph.height  = (bakedChar.y1() - bakedChar.y0());
-                    glyph.s0      = quad.s0();
-                    glyph.s1      = quad.s1();
-                    glyph.t0      = quad.t0();
-                    glyph.t1      = quad.t1();
+                    glyph.advance  = (int) bakedChar.xadvance();
+                    glyph.width    = (bakedChar.x1() - bakedChar.x0());
+                    glyph.height   = (bakedChar.y1() - bakedChar.y0());
+                    glyph.bearingX = (int) bakedChar.xoff();
+                    glyph.bearingY = (int) (-bakedChar.yoff() - glyph.height);
+                    glyph.s0       = quad.s0();
+                    glyph.s1       = quad.s1();
+                    glyph.t0       = quad.t0();
+                    glyph.t1       = quad.t1();
+                    
+                    System.out.println("char: " + charset.charAt(i));
+                    System.out.println("advance: " + glyph.advance);
+                    System.out.println("width: " + glyph.width);
+                    System.out.println("height: " + glyph.height);
+                    System.out.println("bearingX: " + glyph.bearingX);
+                    System.out.println("bearingY: " + glyph.bearingY);
+                    System.out.println();
                     
                     glyphs.put(charset.charAt(i), glyph);
-                    
-                    
-                    System.out.println(charset.charAt(i));
-                    System.out.println("xOff: " + bakedCharBuf.get(i).xoff());
-                    System.out.println("yOff: " + (bakedCharBuf.get(i).yoff()));
-                    System.out.println("advance: " + ((int) bakedCharBuf.get(i).xadvance()));
-                    System.out.println();
                     
                     MemoryUtil.memFree(xPosBuf);
                     MemoryUtil.memFree(yPosBuf);
@@ -177,8 +182,8 @@ public class Font {
         for(char c : text.toCharArray()) {
             Glyph g = glyphs.get(c);
             
-            float x  = xPos;
-            float y  = yPos;
+            float x  = xPos + g.bearingX;
+            float y  = yPos + g.bearingY;
             float w  = glyphs.get(c).width;
             float h  = glyphs.get(c).height;
             float s0 = glyphs.get(c).s0;

@@ -153,7 +153,7 @@ public final class App {
         setClearColor(Color.WHITE);
         Matrix4f projMatrix = new Matrix4f();
         projMatrix.setOrtho(0, window.getWidth(), 0, window.getHeight(), 0, Integer.MAX_VALUE);
-        Font font = new Font("fnt_karla_regular.ttf", 24);
+        Font font = new Font("fnt_karla_regular.ttf", 17);
         Triangle triangle = new Triangle(0, 0, -5, 1);
         
         while(!glfwWindowShouldClose(window.handle)) {
@@ -187,7 +187,7 @@ public final class App {
                 uiProgram.use();
                 uiProgram.setUniform("uProjection", false, projMatrix);
                 font.drawString("The quick brown fox jumped over the lazy dog.", 40, 100, Color.RED, uiProgram);
-                //font.drawBitmap(uiProgram);
+                //font.drawString("Visible Geometry", 40, 100, Color.RED, uiProgram);
             }
             
             glfwSwapBuffers(window.handle);
