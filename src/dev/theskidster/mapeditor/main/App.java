@@ -67,8 +67,8 @@ public final class App {
                     case XMLStreamConstants.START_ELEMENT -> {
                         if(xmlReader.getName().getLocalPart().equals("config")) {
                             vSync        = Boolean.parseBoolean(xmlReader.getAttributeValue(null, "vSync"));
-                            windowWidth  = Integer.parseInt(xmlReader.getAttributeValue(null, "windowWidth"));
-                            windowHeight = Integer.parseInt(xmlReader.getAttributeValue(null, "windowHeight"));
+                            //windowWidth  = Integer.parseInt(xmlReader.getAttributeValue(null, "windowWidth"));
+                            //windowHeight = Integer.parseInt(xmlReader.getAttributeValue(null, "windowHeight"));
                         }
                     }
                     
@@ -153,7 +153,7 @@ public final class App {
         setClearColor(Color.WHITE);
         Matrix4f projMatrix = new Matrix4f();
         projMatrix.setOrtho(0, window.getWidth(), 0, window.getHeight(), 0, Integer.MAX_VALUE);
-        Font font = new Font("fnt_karla_regular.ttf", 17);
+        Font font = new Font("fnt_karla_regular.ttf", 14);
         Triangle triangle = new Triangle(0, 0, -5, 1);
         
         while(!glfwWindowShouldClose(window.handle)) {

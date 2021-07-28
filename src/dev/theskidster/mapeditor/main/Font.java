@@ -127,14 +127,6 @@ public class Font {
                     glyph.t0       = quad.t0();
                     glyph.t1       = quad.t1();
                     
-                    System.out.println("char: " + charset.charAt(i));
-                    System.out.println("advance: " + glyph.advance);
-                    System.out.println("width: " + glyph.width);
-                    System.out.println("height: " + glyph.height);
-                    System.out.println("bearingX: " + glyph.bearingX);
-                    System.out.println("bearingY: " + glyph.bearingY);
-                    System.out.println();
-                    
                     glyphs.put(charset.charAt(i), glyph);
                     
                     MemoryUtil.memFree(xPosBuf);
