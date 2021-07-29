@@ -20,6 +20,11 @@ final class UI {
     
     UI(Window window, String fontFilename, int fontSize) {
         setFont(fontFilename, fontSize);
+        configure(window.getWidth(), window.getHeight());
+    }
+    
+    void configure(int windowWidth, int windowHeight) {
+        projMatrix.setOrtho(0, windowWidth, 0, windowHeight, 0, Integer.MAX_VALUE);
     }
     
     void update() {

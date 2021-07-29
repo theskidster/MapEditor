@@ -146,7 +146,7 @@ public final class App {
      * Exposes the window and begins running the application.
      */
     void start() {
-        window.show(monitor, vSync, camera);
+        window.show(monitor, vSync, camera, ui);
         
         final double TARGET_DELTA = 1 / 60.0;
         double prevTime = glfwGetTime();
@@ -156,7 +156,6 @@ public final class App {
         
         setClearColor(Color.WHITE);
         
-        //projMatrix.setOrtho(0, window.getWidth(), 0, window.getHeight(), 0, Integer.MAX_VALUE);
         Triangle triangle = new Triangle(0, 0, -5, 1);
         
         while(!glfwWindowShouldClose(window.handle)) {

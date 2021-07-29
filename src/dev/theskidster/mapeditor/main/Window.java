@@ -67,7 +67,7 @@ final class Window {
      * @param monitor the monitor the window will appear on
      * @param vSync   if true, vertical sync will be enabled
      */
-    void show(Monitor monitor, boolean vSync, Camera camera) {
+    void show(Monitor monitor, boolean vSync, Camera camera, UI ui) {
         glfwSetWindowMonitor(handle, NULL, xPos, yPos, width, height, monitor.refreshRate);
         glfwSetWindowPos(handle, xPos, yPos);
         glfwSwapInterval((vSync) ? 1 : 0);
@@ -84,7 +84,8 @@ final class Window {
             height = h;
             
             minimized = (w == 0) && (h == 0);
-            glViewport(0, 0, width, height);
+            
+            ui.configure(width, height);
         });
         
         glfwSetCursorPosCallback(handle, (window, x, y) -> {
