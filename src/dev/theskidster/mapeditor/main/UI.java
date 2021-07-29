@@ -1,5 +1,6 @@
 package dev.theskidster.mapeditor.main;
 
+import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.graphics.Color;
 import dev.theskidster.shadercore.GLProgram;
 import org.joml.Matrix4f;
@@ -16,7 +17,8 @@ final class UI {
 
     private Font font;
     
-    private final Matrix4f projMatrix = new Matrix4f();
+    private final Matrix4f projMatrix   = new Matrix4f();
+    private final Background background = new Background();
     
     UI(Window window, String fontFilename, int fontSize) {
         setFont(fontFilename, fontSize);
@@ -33,6 +35,8 @@ final class UI {
     
     void render(GLProgram uiProgram) {
         uiProgram.setUniform("uProjection", false, projMatrix);
+        
+        background.drawRectangle(200, 140, 120, 80, Color.BLUE, uiProgram);
         font.drawString("The quick brown fox jumped over the lazy dog.", 40, 100, Color.RED, uiProgram);
     }
     

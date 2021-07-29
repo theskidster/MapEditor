@@ -10,7 +10,7 @@ out vec2 ioTexCoords;
 
 void main() {
     switch(uType) {
-        case 0: //Used for text rendering.
+        case 0: case 1: //Used for rendering text and drawing background rectangles.
             ioTexCoords = aTexCoords;
             gl_Position = uProjection * vec4(aPosition, 0, 1);
             break;
