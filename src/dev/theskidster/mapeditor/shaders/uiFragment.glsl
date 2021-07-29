@@ -11,7 +11,6 @@ out vec4 ioResult;
 void main() {
     switch(uType) {
         case 0: //Used for text rendering.
-            //ioResult = vec4(uColor, 1);
             ioResult = vec4(uColor, texture(uTexture, ioTexCoords).a);
             break;
     }

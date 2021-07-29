@@ -156,10 +156,7 @@ public final class App {
         
         setClearColor(Color.WHITE);
         
-        //TODO: move this projection matrix to somewhere more appropriate.
-        Matrix4f projMatrix = new Matrix4f();
-        projMatrix.setOrtho(0, window.getWidth(), 0, window.getHeight(), 0, Integer.MAX_VALUE);
-        Font font = new Font("fnt_karla_regular.ttf", 14);
+        //projMatrix.setOrtho(0, window.getWidth(), 0, window.getHeight(), 0, Integer.MAX_VALUE);
         Triangle triangle = new Triangle(0, 0, -5, 1);
         
         while(!glfwWindowShouldClose(window.handle)) {
@@ -179,6 +176,7 @@ public final class App {
                 glfwPollEvents();
                 
                 camera.update(window.getWidth(), window.getHeight());
+                ui.update();
                 triangle.update();
             }
             
@@ -191,8 +189,8 @@ public final class App {
                 triangle.render(sceneProgram);
                 
                 uiProgram.use();
-                uiProgram.setUniform("uProjection", false, projMatrix);
-                font.drawString("The quick brown fox jumped over the lazy dog.", 40, 100, Color.RED, uiProgram);
+                glViewport(0, 0, window.getWidth(), window.getHeight());
+                ui.render(uiProgram);
             }
             
             glfwSwapBuffers(window.handle);
