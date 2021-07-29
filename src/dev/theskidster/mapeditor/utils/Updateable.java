@@ -1,5 +1,8 @@
 package dev.theskidster.mapeditor.utils;
 
+import dev.theskidster.mapeditor.commands.Command;
+import dev.theskidster.mapeditor.main.Mouse;
+
 /**
  * Created: Jul 28, 2021
  */
@@ -10,6 +13,6 @@ package dev.theskidster.mapeditor.utils;
  */
 public interface Updateable {
     
-    
+    Command update(Mouse mouse);
     
 }

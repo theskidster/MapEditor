@@ -1,8 +1,9 @@
 package dev.theskidster.mapeditor.main;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.nio.IntBuffer;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glViewport;
 import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -16,7 +17,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * @author J Hoffman
  * @since  0.0.0
  */
-final class Window {
+final class Window implements PropertyChangeListener {
 
     private int xPos;
     private int yPos;
@@ -31,6 +32,7 @@ final class Window {
     private boolean mouseRightHeld;
     
     final String title;
+    private final Cursor cursor = new Cursor();
     
     /**
      * Creates a new object that represents the applications window.
@@ -89,6 +91,8 @@ final class Window {
         });
         
         glfwSetCursorPosCallback(handle, (window, x, y) -> {
+            ui.setMouseCursorPos(x, y);
+            
             if(mouseLeftHeld ^ mouseMiddleHeld ^ mouseRightHeld) {
                 if(mouseMiddleHeld) camera.setPosition(x, y);
                 if(mouseRightHeld)  camera.setDirection(x, y);
@@ -99,6 +103,8 @@ final class Window {
         });
         
         glfwSetMouseButtonCallback(handle, (window, button, action, mods) -> {
+            ui.setMouseAction(button, action);
+            
             switch(button) {
                 case GLFW_MOUSE_BUTTON_LEFT -> {
                     
@@ -110,6 +116,8 @@ final class Window {
         });
         
         glfwSetScrollCallback(handle, (window, xOffset, yOffset) -> {
+            ui.setMouseScroll((int) yOffset);
+            
             camera.dolly((float) yOffset);
         });
     }
@@ -159,6 +167,13 @@ final class Window {
      */
     boolean getMinimized() {
         return minimized;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        switch(evt.getPropertyName()) {
+            case "cursorShape" -> cursor.setShape(handle, (int) evt.getNewValue());
+        }
     }
     
 }
