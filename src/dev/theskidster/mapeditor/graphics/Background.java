@@ -12,6 +12,8 @@ import org.lwjgl.system.MemoryStack;
  */
 
 /**
+ * Used to draw rectangles as part of a background to a user interface.
+ * 
  * @author J Hoffman
  * @since  0.0.0
  */
@@ -22,6 +24,9 @@ public final class Background {
     private final int vao = glGenVertexArrays();
     private final int vbo = glGenBuffers();
     
+    /**
+     * Initializes the background object.
+     */
     public Background() {
         glBindVertexArray(vao);
         
@@ -33,6 +38,18 @@ public final class Background {
         glEnableVertexAttribArray(0);
     }
     
+    /**
+     * Draws a rectangle to the screen.
+     * 
+     * @param xPos      the x-coordinate of the rectangle in the applications
+     *                  window
+     * @param yPos      the y-coordinate of the rectangle in the applications 
+     *                  window
+     * @param width     the width of the rectangle
+     * @param height    the height of the rectangle
+     * @param color     the color the rectangle will appear in
+     * @param uiProgram a shader program used to render the UI
+     */
     public void drawRectangle(float xPos, float yPos, float width, float height, Color color, GLProgram uiProgram) {
         glBindVertexArray(vao);
         
@@ -60,10 +77,21 @@ public final class Background {
         App.checkGLError();
     }
     
+    /**
+     * Alternate version of {@link drawRectangle}.
+     * 
+     * @param r         the rectangle to draw
+     * @param color     the color the rectangle will appear in
+     * @param uiProgram a shader program used to render the UI
+     */
     public void drawRectangle(Rectangle r, Color color, GLProgram uiProgram) {
         drawRectangle(r.xPos, r.yPos, r.width, r.height, color, uiProgram);
     }
     
+    /**
+     * Frees the data buffers allocated by the background object. This should 
+     * only be used when the object is no longer needed.
+     */
     public void freeBuffers() {
         glDeleteVertexArrays(vao);
         glDeleteBuffers(vbo);

@@ -68,6 +68,8 @@ final class Window implements PropertyChangeListener {
      * 
      * @param monitor the monitor the window will appear on
      * @param vSync   if true, vertical sync will be enabled
+     * @param camera  the camera object used to navigate through the scene
+     * @param ui      the object representing the user interface
      */
     void show(Monitor monitor, boolean vSync, Camera camera, UI ui) {
         glfwSetWindowMonitor(handle, NULL, xPos, yPos, width, height, monitor.refreshRate);

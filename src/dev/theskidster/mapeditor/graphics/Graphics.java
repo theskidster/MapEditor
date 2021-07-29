@@ -10,6 +10,9 @@ import static org.lwjgl.opengl.GL30.*;
  */
 
 /**
+ * Convenience class that contains several data buffers useful for interfacing
+ * with the graphics pipeline.
+ * 
  * @author J Hoffman
  * @since  0.0.0
  */
@@ -24,6 +27,11 @@ public class Graphics {
     
     public Matrix4f modelMatrix = new Matrix4f();
     
+    /**
+     * Sets the data buffers to occupy their corresponding binding targets. 
+     * While attached, all subsequent vertex layout definitions will be bound 
+     * to their respective buffers until a new target is specified.
+     */
     public void bindBuffers() {
         glBindVertexArray(vao);
         
@@ -36,6 +44,10 @@ public class Graphics {
         }
     }
     
+    /**
+     * Frees the data buffers allocated by the graphics object. This should 
+     * only be used when the object is no longer needed.
+     */
     public void freeBuffers() {
         glDeleteVertexArrays(vao);
         glDeleteBuffers(vbo);
