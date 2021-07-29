@@ -47,6 +47,7 @@ public final class App {
     private final GLProgram sceneProgram;
     private final GLProgram uiProgram;
     private final Camera camera;
+    private final UI ui;
     
     /**
      * Initializes the applications dependencies.
@@ -54,8 +55,10 @@ public final class App {
     App() {
         glfwInit();
         
-        int windowWidth  = 1200;
-        int windowHeight = 800;
+        int windowWidth     = 1200;
+        int windowHeight    = 800;
+        String fontFilename = "fnt_karla_regular.ttf";
+        int fontSize        = 14;
         
         //Import user preferences.
         try {
@@ -66,9 +69,10 @@ public final class App {
                 switch(xmlReader.next()) {
                     case XMLStreamConstants.START_ELEMENT -> {
                         if(xmlReader.getName().getLocalPart().equals("config")) {
-                            vSync        = Boolean.parseBoolean(xmlReader.getAttributeValue(null, "vSync"));
+                            //TODO: uncomment these during final build, add font size and filename.
                             //windowWidth  = Integer.parseInt(xmlReader.getAttributeValue(null, "windowWidth"));
                             //windowHeight = Integer.parseInt(xmlReader.getAttributeValue(null, "windowHeight"));
+                            vSync        = Boolean.parseBoolean(xmlReader.getAttributeValue(null, "vSync"));
                         }
                     }
                     
@@ -135,7 +139,7 @@ public final class App {
         }
         
         camera = new Camera();
-        
+        ui     = new UI(window, fontFilename, fontSize);
     }
     
     /**
@@ -151,6 +155,8 @@ public final class App {
         boolean ticked;
         
         setClearColor(Color.WHITE);
+        
+        //TODO: move this projection matrix to somewhere more appropriate.
         Matrix4f projMatrix = new Matrix4f();
         projMatrix.setOrtho(0, window.getWidth(), 0, window.getHeight(), 0, Integer.MAX_VALUE);
         Font font = new Font("fnt_karla_regular.ttf", 14);
@@ -187,7 +193,6 @@ public final class App {
                 uiProgram.use();
                 uiProgram.setUniform("uProjection", false, projMatrix);
                 font.drawString("The quick brown fox jumped over the lazy dog.", 40, 100, Color.RED, uiProgram);
-                //font.drawString("Visible Geometry", 40, 100, Color.RED, uiProgram);
             }
             
             glfwSwapBuffers(window.handle);
@@ -209,7 +214,11 @@ public final class App {
                       .append("windowHeight=\"")
                       .append(window.getHeight() + "\" ")
                       .append("vSync=\"")
-                      .append(vSync + "\">")
+                      .append(vSync + "\" ")
+                      .append("fontFilename=\"")
+                      .append(ui.getFontFilename() + "\" ")
+                      .append("fontSize=\"")
+                      .append(ui.getFontSize() + "\">")
                       .append("</config>");
             }
         } catch(IOException e) {

@@ -23,17 +23,20 @@ import org.lwjgl.system.MemoryUtil;
 
 /**
  * @author J Hoffman
- * @since  
+ * @since  0.0.0
  */
 public class Font {
 
     private final int FLOATS_PER_GLYPH = 24;
     
+    final int size;
     private final int texHandle;
     private final int vao = glGenVertexArrays();
     private final int vbo = glGenBuffers();
     
     private final float SCALE = 1.5f;
+    
+    final String filename;
     
     private final Map<Character, Glyph> glyphs = new HashMap<>();
     
@@ -51,6 +54,9 @@ public class Font {
     }
     
     Font(String filename, int size) {
+        this.filename = filename;
+        this.size     = size;
+        
         texHandle = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texHandle);
         
@@ -158,7 +164,6 @@ public class Font {
             JLogger.setModule("core");
             JLogger.logSevere("Failed to load font \"" + filename + "\"", e);
         }
-        
     }
     
     public void drawString(String text, int xPos, int yPos, Color color, GLProgram uiProgram) {
