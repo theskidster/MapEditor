@@ -166,7 +166,7 @@ public class Font {
         }
     }
     
-    public void drawString(String text, int xPos, int yPos, Color color, GLProgram uiProgram) {
+    public void drawString(String text, float xPos, float yPos, Color color, GLProgram uiProgram) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         

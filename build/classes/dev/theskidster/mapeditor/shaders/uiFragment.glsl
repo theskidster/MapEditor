@@ -17,5 +17,10 @@ void main() {
         case 1: //Used for drawing background rectangles.
             ioResult = vec4(uColor, 0);
             break;
+
+        case 2: //Used for icons.
+            if(texture(uTexture, ioTexCoords).a == 0) discard;
+            ioResult = texture(uTexture, ioTexCoords) * vec4(uColor, 1);
+            break;
     }
 }

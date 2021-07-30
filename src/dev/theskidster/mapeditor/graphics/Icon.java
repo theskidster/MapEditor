@@ -1,5 +1,8 @@
 package dev.theskidster.mapeditor.graphics;
 
+import dev.theskidster.jlogger.JLogger;
+import dev.theskidster.mapeditor.main.App;
+import dev.theskidster.shadercore.GLProgram;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import static org.lwjgl.opengl.GL30.*;
@@ -67,10 +70,12 @@ public final class Icon {
         if(atlas.subImageOffsets.containsKey(tempCell)) {
             currCell = atlas.subImageOffsets.get(tempCell);
         } else {
-            Logger.logWarning(
+            JLogger.setModule("graphics");
+            JLogger.logWarning(
                     "Failed to set icon sub-image. The cell location: (" + cellX + 
                     ", " + cellY + ") is out of bounds.", 
                     null);
+            JLogger.setModule(null);
         }
     }
     
@@ -78,7 +83,7 @@ public final class Icon {
         this.color = color;
     }
     
-    public void render(Program uiProgram) {
+    public void render(GLProgram uiProgram) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
