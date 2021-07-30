@@ -43,8 +43,8 @@ public final class Icon {
             g.indices  = stack.mallocInt(6);
             
             //(vec2 position), (vec2 tex coords) (vec3 color)
-            g.vertices.put(0)        .put(-cellHeight)  .put(0)                  .put(0);
-            g.vertices.put(cellWidth).put(-cellHeight)  .put(atlas.subImageWidth).put(0);
+            g.vertices.put(0)        .put(cellHeight)   .put(0)                  .put(0);
+            g.vertices.put(cellWidth).put(cellHeight)   .put(atlas.subImageWidth).put(0);
             g.vertices.put(cellWidth).put(0)            .put(atlas.subImageWidth).put(atlas.subImageHeight);
             g.vertices.put(0)        .put(0)            .put(0)                  .put(atlas.subImageHeight);
             

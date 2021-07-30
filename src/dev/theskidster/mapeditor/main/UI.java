@@ -3,6 +3,7 @@ package dev.theskidster.mapeditor.main;
 import dev.theskidster.mapeditor.commands.CommandHistory;
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.graphics.Color;
+import dev.theskidster.mapeditor.graphics.Icon;
 import dev.theskidster.shadercore.GLProgram;
 import org.joml.Matrix4f;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
@@ -21,6 +22,7 @@ final class UI {
 
     private Font font;
     private final Mouse mouse;
+    Icon icon = new Icon(20, 20);
     
     private final Matrix4f projMatrix   = new Matrix4f();
     private final Background background = new Background();
@@ -30,6 +32,10 @@ final class UI {
         
         setFont(fontFilename, fontSize);
         configure(window.getWidth(), window.getHeight());
+        
+        icon.position.set(220, 160);
+        icon.setSubImage(0, 1);
+        icon.setColor(Color.YELLOW);
     }
     
     void configure(int windowWidth, int windowHeight) {
@@ -43,8 +49,10 @@ final class UI {
     void render(GLProgram uiProgram) {
         uiProgram.setUniform("uProjection", false, projMatrix);
         
-        background.drawRectangle(200, 140, 120, 80, Color.BLUE, uiProgram);
+        background.drawRectangle(200, 140, 120, 80, Color.RGME_DARK_GRAY, uiProgram);
         font.drawString("The quick brown fox jumped over the lazy dog.", 40, 100, Color.RED, uiProgram);
+        
+        icon.render(uiProgram);
     }
     
     String getFontFilename() {
