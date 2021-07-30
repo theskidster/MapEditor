@@ -14,6 +14,7 @@ import org.joml.Vector3f;
  */
 public class Color {
 
+    //XJGE 2.0.0 color palette:
     public static final Color WHITE   = new Color(1);
     public static final Color SILVER  = new Color(0.753f);
     public static final Color GRAY    = new Color(0.38f);
@@ -30,6 +31,19 @@ public class Color {
     public static final Color MAGENTA = new Color(255, 0, 255);
     public static final Color PINK    = new Color(255, 153, 204);
     public static final Color BROWN   = new Color(102, 51, 0);
+    
+    //Map Editor UI colors:
+    public static final Color RGME_WHITE       = new Color(215, 216, 223);
+    public static final Color RGME_SILVER      = new Color(161, 162, 179);
+    public static final Color RGME_LIGHT_GRAY  = new Color(85, 93, 109);
+    public static final Color RGME_MEDIUM_GRAY = new Color(53, 58, 76);
+    public static final Color RGME_DARK_GRAY   = new Color(40, 45, 62);
+    public static final Color RGME_SLATE_GRAY  = new Color(32, 35, 51);
+    public static final Color RGME_BLACK       = new Color(19, 22, 29);
+    public static final Color RGME_RED         = new Color(232, 17, 35);
+    public static final Color RGME_GREEN       = new Color(4, 186, 0);
+    public static final Color RGME_BLUE        = new Color(51, 102, 204);
+    public static final Color RGME_YELLOW      = new Color(237, 251, 93);
     
     public final float r;
     public final float g;

@@ -11,7 +11,7 @@ import dev.theskidster.mapeditor.main.Mouse;
  * @author J Hoffman
  * @since  0.0.0
  */
-public interface Updateable {
+public interface Updatable {
     
     Command update(Mouse mouse);
     
