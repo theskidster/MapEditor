@@ -1,5 +1,6 @@
 package dev.theskidster.mapeditor.main;
 
+import dev.theskidster.mapeditor.commands.CommandHistory;
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.graphics.Color;
 import dev.theskidster.shadercore.GLProgram;
@@ -35,7 +36,7 @@ final class UI {
         projMatrix.setOrtho(0, windowWidth, 0, windowHeight, 0, Integer.MAX_VALUE);
     }
     
-    void update() {
+    void update(CommandHistory cmdHistory) {
         mouse.scrolled = false;
     }
     

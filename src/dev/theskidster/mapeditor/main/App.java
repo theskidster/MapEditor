@@ -1,6 +1,7 @@
 package dev.theskidster.mapeditor.main;
 
 import dev.theskidster.jlogger.JLogger;
+import dev.theskidster.mapeditor.commands.CommandHistory;
 import dev.theskidster.mapeditor.graphics.Color;
 import dev.theskidster.shadercore.BufferType;
 import dev.theskidster.shadercore.GLProgram;
@@ -18,7 +19,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import org.joml.Matrix4f;
 import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.opengl.GL;
 import static org.lwjgl.opengl.GL20.*;
@@ -48,6 +48,8 @@ public final class App {
     private final GLProgram uiProgram;
     private final Camera camera;
     private final UI ui;
+    
+    private final CommandHistory cmdHistory = new CommandHistory();
     
     /**
      * Initializes the applications dependencies.
@@ -146,7 +148,7 @@ public final class App {
      * Exposes the window and begins running the application.
      */
     void start() {
-        window.show(monitor, vSync, camera, ui);
+        window.show(monitor, vSync, camera, ui, cmdHistory);
         
         final double TARGET_DELTA = 1 / 60.0;
         double prevTime = glfwGetTime();
@@ -175,7 +177,7 @@ public final class App {
                 glfwPollEvents();
                 
                 camera.update(window.getWidth(), window.getHeight());
-                ui.update();
+                ui.update(cmdHistory);
                 triangle.update();
             }
             

@@ -1,5 +1,6 @@
 package dev.theskidster.mapeditor.main;
 
+import dev.theskidster.mapeditor.commands.CommandHistory;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.IntBuffer;
@@ -30,6 +31,7 @@ final class Window implements PropertyChangeListener {
     private boolean mouseLeftHeld;
     private boolean mouseMiddleHeld;
     private boolean mouseRightHeld;
+    private boolean ctrlHeld;
     
     final String title;
     private final Cursor cursor = new Cursor();
@@ -71,7 +73,7 @@ final class Window implements PropertyChangeListener {
      * @param camera  the camera object used to navigate through the scene
      * @param ui      the object representing the user interface
      */
-    void show(Monitor monitor, boolean vSync, Camera camera, UI ui) {
+    void show(Monitor monitor, boolean vSync, Camera camera, UI ui, CommandHistory cmdHistory) {
         glfwSetWindowMonitor(handle, NULL, xPos, yPos, width, height, monitor.refreshRate);
         glfwSetWindowPos(handle, xPos, yPos);
         glfwSwapInterval((vSync) ? 1 : 0);
@@ -121,6 +123,19 @@ final class Window implements PropertyChangeListener {
             ui.setMouseScroll((int) yOffset);
             
             camera.dolly((float) yOffset);
+        });
+        
+        glfwSetKeyCallback(handle, (window, key, scancode, action, mods) -> {
+            //ui.captureKeyInput(key, action);
+            
+            ctrlHeld = (mods == GLFW_MOD_CONTROL);
+            
+            if(ctrlHeld) {
+                switch(key) {
+                    case GLFW_KEY_Z -> { if(action == GLFW_PRESS) cmdHistory.undoCommand(); }
+                    case GLFW_KEY_Y -> { if(action == GLFW_PRESS) cmdHistory.redoCommand(); }
+                }
+            }
         });
     }
     
