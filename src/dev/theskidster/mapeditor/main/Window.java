@@ -44,7 +44,7 @@ final class Window implements PropertyChangeListener {
      * @param width   the width of the window
      * @param height  the height of the window
      */
-    Window(String title, Monitor monitor, int width, int height) {
+    Window(String title, boolean maximized, Monitor monitor, int width, int height) {
         this.title  = title;
         this.width  = width;
         this.height = height;
@@ -62,6 +62,12 @@ final class Window implements PropertyChangeListener {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         
+        if(maximized) {
+            glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+            width  = monitor.width;
+            height = monitor.height;
+        }
+        
         handle = glfwCreateWindow(width, height, title, NULL, NULL);
     }
     
@@ -73,9 +79,12 @@ final class Window implements PropertyChangeListener {
      * @param camera  the camera object used to navigate through the scene
      * @param ui      the object representing the user interface
      */
-    void show(Monitor monitor, boolean vSync, Camera camera, UI ui, CommandHistory cmdHistory) {
-        glfwSetWindowMonitor(handle, NULL, xPos, yPos, width, height, monitor.refreshRate);
-        glfwSetWindowPos(handle, xPos, yPos);
+    void show(Monitor monitor, boolean maximized, boolean vSync, Camera camera, UI ui, CommandHistory cmdHistory) {
+        if(!maximized) {
+            glfwSetWindowMonitor(handle, NULL, xPos, yPos, width, height, monitor.refreshRate);
+            glfwSetWindowPos(handle, xPos, yPos);
+        }
+        
         glfwSwapInterval((vSync) ? 1 : 0);
         glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         glfwShowWindow(handle);
@@ -184,6 +193,10 @@ final class Window implements PropertyChangeListener {
      */
     boolean getMinimized() {
         return minimized;
+    }
+    
+    boolean getMaximized() {
+        return (glfwGetWindowAttrib(handle, GLFW_MAXIMIZED) == GLFW_TRUE);
     }
 
     @Override

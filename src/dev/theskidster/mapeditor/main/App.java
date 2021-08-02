@@ -37,6 +37,7 @@ public final class App {
 
     private int tickCount = 0;
     
+    private boolean windowMaximized;
     private boolean vSync = true;
     
     public static final String ASSETS_PATH = "/dev/theskidster/mapeditor/assets/";
@@ -71,10 +72,10 @@ public final class App {
                 switch(xmlReader.next()) {
                     case XMLStreamConstants.START_ELEMENT -> {
                         if(xmlReader.getName().getLocalPart().equals("config")) {
-                            //TODO: uncomment these during final build, add font size and filename.
-                            //windowWidth  = Integer.parseInt(xmlReader.getAttributeValue(null, "windowWidth"));
-                            //windowHeight = Integer.parseInt(xmlReader.getAttributeValue(null, "windowHeight"));
-                            vSync        = Boolean.parseBoolean(xmlReader.getAttributeValue(null, "vSync"));
+                            windowWidth     = Integer.parseInt(xmlReader.getAttributeValue(null, "windowWidth"));
+                            windowHeight    = Integer.parseInt(xmlReader.getAttributeValue(null, "windowHeight"));
+                            windowMaximized = Boolean.parseBoolean(xmlReader.getAttributeValue(null, "windowMaximized"));
+                            vSync           = Boolean.parseBoolean(xmlReader.getAttributeValue(null, "vSync"));
                         }
                     }
                     
@@ -92,7 +93,7 @@ public final class App {
         }
         
         monitor = new Monitor();
-        window  = new Window("XJGE Map Editor v" + VERSION, monitor, windowWidth, windowHeight);
+        window  = new Window("XJGE Map Editor v" + VERSION, windowMaximized, monitor, windowWidth, windowHeight);
         
         glfwMakeContextCurrent(window.handle);
         GL.createCapabilities();
@@ -150,7 +151,7 @@ public final class App {
      * Exposes the window and begins running the application.
      */
     void start() {
-        window.show(monitor, vSync, camera, ui, cmdHistory);
+        window.show(monitor, windowMaximized, vSync, camera, ui, cmdHistory);
         
         final double TARGET_DELTA = 1 / 60.0;
         double prevTime = glfwGetTime();
@@ -214,6 +215,8 @@ public final class App {
                       .append(window.getWidth() + "\" ")
                       .append("windowHeight=\"")
                       .append(window.getHeight() + "\" ")
+                      .append("windowMaximized=\"")
+                      .append(window.getMaximized() + "\" ")
                       .append("vSync=\"")
                       .append(vSync + "\" ")
                       .append("fontFilename=\"")
