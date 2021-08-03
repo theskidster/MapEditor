@@ -40,9 +40,9 @@ public abstract class Container extends Widget implements Updatable, Renderable,
     }
     
     protected void renderTitleBar(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(titleBar, Color.RGME_LIGHT_GRAY, uiProgram);
+        background.drawRectangle(titleBar, Color.SILVER, uiProgram);
         icon.render(uiProgram);
-        font.drawString(title, bounds.xPos + 40, bounds.yPos + 26, Color.RGME_WHITE, uiProgram);
+        font.drawString(title, bounds.xPos + 40, bounds.yPos + 26, Color.GRAY, uiProgram);
     }
     
     protected void relocateTitleBar() {
