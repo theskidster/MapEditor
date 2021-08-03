@@ -159,7 +159,7 @@ public final class App {
         double delta = 0;
         boolean ticked;
         
-        setClearColor(Color.WHITE);
+        setClearColor(Color.BLACK);
         
         Triangle triangle = new Triangle(0, 0, -5, 1);
         

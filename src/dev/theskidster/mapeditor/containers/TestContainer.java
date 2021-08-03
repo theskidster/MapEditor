@@ -18,7 +18,7 @@ import dev.theskidster.shadercore.GLProgram;
 public class TestContainer extends Container {
 
     public TestContainer() {
-        super(800, 400, 500, 300, "Title", 5, 1);
+        super(0, 0, 500, 300, "Title", 5, 1);
         
         
     }
@@ -30,13 +30,13 @@ public class TestContainer extends Container {
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(bounds, Color.SILVER, uiProgram);
-        renderTitleBar(uiProgram, background, font);
+        background.drawRectangle(bounds, Color.EDIT_MEDIUM_GRAY, uiProgram);
+        //renderTitleBar(uiProgram, background, font);
     }
 
     @Override
     public void relocate(float parentPosX, float parentPosY) {
-        relocateTitleBar();
+        //relocateTitleBar();
     }
     
 }

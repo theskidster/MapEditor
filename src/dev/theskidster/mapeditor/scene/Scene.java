@@ -8,8 +8,12 @@ package dev.theskidster.mapeditor.scene;
  * @author J Hoffman
  * @since  0.0.0
  */
-final class Scene {
+public final class Scene {
 
+    public Scene(String name) {
+        
+    }
+    
     void update() {
         
     }
