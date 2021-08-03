@@ -33,16 +33,17 @@ public abstract class Container extends Widget implements Updatable, Renderable,
         super(xPos, yPos, width, height);
         this.title = title;
         
+        titleBar = new Rectangle(xPos, yPos + height, width, 34);
+        
         icon = new Icon(20, 20);
         icon.setSubImage(cellX, cellY);
-        
-        titleBar = new Rectangle(xPos, yPos, width, 40);
+        icon.position.set(titleBar.xPos + 8, titleBar.yPos + 7);
     }
     
     protected void renderTitleBar(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(titleBar, Color.SILVER, uiProgram);
+        background.drawRectangle(titleBar, Color.UI_BLUE, uiProgram);
         icon.render(uiProgram);
-        font.drawString(title, bounds.xPos + 40, bounds.yPos + 26, Color.GRAY, uiProgram);
+        font.drawString(title, titleBar.xPos + 36, titleBar.yPos + 10, Color.WHITE, uiProgram);
     }
     
     protected void relocateTitleBar() {

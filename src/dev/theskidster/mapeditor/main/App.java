@@ -35,7 +35,7 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public final class App {
 
-    private int tickCount = 0;
+    private static int tickCount = 0;
     
     private boolean windowMaximized;
     private boolean vSync = true;
@@ -256,6 +256,10 @@ public final class App {
     
     public static void setClearColor(Color color) {
         glClearColor(color.r, color.g, color.b, 0);
+    }
+    
+    public static boolean tick(int cycles) {
+        return tickCount % cycles == 0;
     }
     
 }

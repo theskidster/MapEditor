@@ -5,6 +5,7 @@ import dev.theskidster.mapeditor.commands.CommandHistory;
 import dev.theskidster.mapeditor.containers.Container;
 import dev.theskidster.mapeditor.containers.TestContainer;
 import dev.theskidster.mapeditor.graphics.Background;
+import dev.theskidster.mapeditor.utils.TextInput;
 import dev.theskidster.shadercore.GLProgram;
 import java.util.LinkedHashSet;
 import org.joml.Matrix4f;
@@ -25,11 +26,12 @@ final class UI {
 
     private Font font;
     private final Mouse mouse;
+    private TextInput textInput;
     
     private final Matrix4f projMatrix   = new Matrix4f();
     private final Background background = new Background();
     
-    private final LinkedHashSet<Container> containers = new LinkedHashSet();
+    private final LinkedHashSet<Container> containers;
     
     UI(Window window, String fontFilename, int fontSize) {
         mouse = new Mouse(window);
@@ -37,7 +39,9 @@ final class UI {
         setFont(fontFilename, fontSize);
         configure(window.getWidth(), window.getHeight());
         
-        containers.add(new TestContainer());
+        containers = new LinkedHashSet<>() {{
+            add(new TestContainer(window.getWidth(), window.getHeight()));
+        }};
     }
     
     void configure(int windowWidth, int windowHeight) {
@@ -91,6 +95,12 @@ final class UI {
     void setMouseScroll(double value) {
         mouse.scrollValue = (float) value;
         mouse.scrolled    = true;
+    }
+    
+    void captureKeyInput(int key, int action) {
+        if(textInput != null && textInput.hasFocus()) {
+            textInput.processKeyInput(key, action);
+        }
     }
     
     public boolean containerHovered() {

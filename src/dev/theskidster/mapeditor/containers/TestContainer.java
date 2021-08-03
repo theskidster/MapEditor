@@ -13,30 +13,31 @@ import dev.theskidster.shadercore.GLProgram;
 
 /**
  * @author J Hoffman
- * @since  0.0.0
+ * @since  
  */
-public class TestContainer extends Container {
+public final class TestContainer extends Container {
 
-    public TestContainer() {
-        super(0, 0, 500, 300, "Title", 5, 1);
-        
-        
+    boolean intersect;
+    
+    public TestContainer(int xPos, int yPos) {
+        super((xPos / 2) - 250, (yPos / 2) - 200, 500, 400, "Title", 3, 4);
     }
 
     @Override
     public Command update(Mouse mouse) {
+        intersect = bounds.contains(mouse.cursorPos);
+        
         return null;
     }
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(bounds, Color.EDIT_MEDIUM_GRAY, uiProgram);
-        //renderTitleBar(uiProgram, background, font);
+        background.drawRectangle(bounds, Color.WHITE, uiProgram);
+        renderTitleBar(uiProgram, background, font);
     }
 
     @Override
     public void relocate(float parentPosX, float parentPosY) {
-        //relocateTitleBar();
     }
-    
+
 }

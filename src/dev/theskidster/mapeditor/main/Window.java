@@ -1,10 +1,17 @@
 package dev.theskidster.mapeditor.main;
 
+import dev.theskidster.jlogger.JLogger;
 import dev.theskidster.mapeditor.commands.CommandHistory;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import static org.lwjgl.glfw.GLFW.*;
+import org.lwjgl.glfw.GLFWImage;
+import static org.lwjgl.stb.STBImage.STBI_rgb_alpha;
+import static org.lwjgl.stb.STBImage.stbi_image_free;
+import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -80,6 +87,33 @@ final class Window implements PropertyChangeListener {
      * @param ui      the object representing the user interface
      */
     void show(Monitor monitor, boolean maximized, boolean vSync, Camera camera, UI ui, CommandHistory cmdHistory) {
+        try(MemoryStack stack = MemoryStack.stackPush()) {
+            byte[] data = Window.class.getResourceAsStream(App.ASSETS_PATH + "img_logo.png").readAllBytes();
+            
+            IntBuffer widthBuf   = stack.mallocInt(1);
+            IntBuffer heightBuf  = stack.mallocInt(1);
+            IntBuffer channelBuf = stack.mallocInt(1);
+            
+            ByteBuffer icon = stbi_load_from_memory(
+                    stack.malloc(data.length).put(data).flip(),
+                    widthBuf,
+                    heightBuf,
+                    channelBuf,
+                    STBI_rgb_alpha);
+            
+            glfwSetWindowIcon(handle, GLFWImage.mallocStack(1, stack)
+                    .width(widthBuf.get())
+                    .height(heightBuf.get())
+                    .pixels(icon));
+            
+            stbi_image_free(icon);
+            
+        } catch(IOException e) {
+            JLogger.setModule("core");
+            JLogger.logWarning("Failed to load window icon.", e);
+            JLogger.setModule(null);
+        }
+        
         if(!maximized) {
             glfwSetWindowMonitor(handle, NULL, xPos, yPos, width, height, monitor.refreshRate);
             glfwSetWindowPos(handle, xPos, yPos);
@@ -135,7 +169,7 @@ final class Window implements PropertyChangeListener {
         });
         
         glfwSetKeyCallback(handle, (window, key, scancode, action, mods) -> {
-            //ui.captureKeyInput(key, action);
+            ui.captureKeyInput(key, action);
             
             ctrlHeld = (mods == GLFW_MOD_CONTROL);
             
