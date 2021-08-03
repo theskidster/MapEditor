@@ -60,7 +60,7 @@ public final class App {
         
         int windowWidth     = 1200;
         int windowHeight    = 800;
-        String fontFilename = "fnt_karla_regular.ttf";
+        String fontFilename = "fnt_roboto_regular.ttf";
         int fontSize        = 14;
         
         //Import user preferences.

@@ -1,11 +1,14 @@
 package dev.theskidster.mapeditor.main;
 
+import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.commands.CommandHistory;
+import dev.theskidster.mapeditor.containers.Container;
+import dev.theskidster.mapeditor.containers.TestContainer;
 import dev.theskidster.mapeditor.graphics.Background;
-import dev.theskidster.mapeditor.graphics.Color;
-import dev.theskidster.mapeditor.graphics.Icon;
 import dev.theskidster.shadercore.GLProgram;
+import java.util.LinkedHashSet;
 import org.joml.Matrix4f;
+import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
@@ -22,10 +25,11 @@ final class UI {
 
     private Font font;
     private final Mouse mouse;
-    Icon icon = new Icon(20, 20);
     
     private final Matrix4f projMatrix   = new Matrix4f();
     private final Background background = new Background();
+    
+    private final LinkedHashSet<Container> containers = new LinkedHashSet();
     
     UI(Window window, String fontFilename, int fontSize) {
         mouse = new Mouse(window);
@@ -33,9 +37,7 @@ final class UI {
         setFont(fontFilename, fontSize);
         configure(window.getWidth(), window.getHeight());
         
-        icon.position.set(220, 160);
-        icon.setSubImage(0, 1);
-        icon.setColor(Color.YELLOW);
+        containers.add(new TestContainer());
     }
     
     void configure(int windowWidth, int windowHeight) {
@@ -43,16 +45,21 @@ final class UI {
     }
     
     void update(CommandHistory cmdHistory) {
+        containers.forEach(container -> {
+            Command command = container.update(mouse);
+            if(command != null) cmdHistory.executeCommand(command);
+        });
+        
+        containers.removeIf(container -> container.removalRequested());
+        
+        if(!containerHovered()) mouse.setCursorShape(GLFW_ARROW_CURSOR);
+        
         mouse.scrolled = false;
     }
     
     void render(GLProgram uiProgram) {
         uiProgram.setUniform("uProjection", false, projMatrix);
-        
-        background.drawRectangle(200, 140, 120, 80, Color.RGME_DARK_GRAY, uiProgram);
-        font.drawString("The quick brown fox jumped over the lazy dog.", 40, 100, Color.RED, uiProgram);
-        
-        icon.render(uiProgram);
+        containers.forEach(container -> container.render(uiProgram, background, font));
     }
     
     String getFontFilename() {
@@ -84,6 +91,10 @@ final class UI {
     void setMouseScroll(double value) {
         mouse.scrollValue = (float) value;
         mouse.scrolled    = true;
+    }
+    
+    public boolean containerHovered() {
+        return containers.stream().anyMatch(container -> container.hovered(mouse.cursorPos));
     }
     
 }
