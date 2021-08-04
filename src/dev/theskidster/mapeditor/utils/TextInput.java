@@ -1,7 +1,13 @@
 package dev.theskidster.mapeditor.utils;
 
+import dev.theskidster.mapeditor.graphics.Icon;
+import dev.theskidster.mapeditor.main.Font;
+import dev.theskidster.mapeditor.main.UI;
 import dev.theskidster.mapeditor.widgets.Widget;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import org.joml.Vector2f;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -14,10 +20,36 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public abstract class TextInput extends Widget implements Updatable, Renderable, Relocatable {
 
-    protected float xOffset;
-    protected float yOffset;
+    protected final int HEIGHT  = 28;
+    protected final int PADDING = 6;
+    
+    private int lengthToIndex;
+    private int textOffset;
+    private int prevIndex;
+    private int currIndex;
+    protected int prevCursorX;
+    protected int firstIndex;
+    protected int lastIndex;
+    
+    protected final float xOffset;
+    protected final float yOffset;
+    protected float parentPosX;
+    protected float parentPosY;
     
     private boolean hasFocus;
+    protected boolean caratIdle;
+    protected boolean caratBlink;
+    protected boolean firstIndexSet;
+    protected boolean shiftHeld;
+    protected boolean prevPressed;
+    protected boolean currPressed;
+    
+    protected final StringBuilder typed = new StringBuilder();
+    protected final Vector2f textPos    = new Vector2f();
+    
+    protected Rectangle highlight     = new Rectangle(0, 0, 0, HEIGHT - 2);
+    protected final Timer timer       = new Timer(1, 18);
+    protected final Icon carat        = new Icon(20, 20);
     
     protected final static HashMap<Integer, Key> keyChars;
     
@@ -79,9 +111,186 @@ public abstract class TextInput extends Widget implements Updatable, Renderable,
         
         this.xOffset = xOffset;
         this.yOffset = yOffset;
+        
+        carat.setSubImage(5, 5);
     }
     
+    private int getClosest(float value1, float value2, float target) {
+        return (int) ((target - value1 >= value2 - target) ? value2 : value1);
+    }
+    
+    private int search(int[] values, float cursorX) {
+        int n = values.length;
+        
+        //Hack included to avoid IndexOutOfBoundsException.
+        if(n == 0) {
+            textOffset = 0;
+            return 0;
+        }
+        
+        if(cursorX <= values[0])     return values[0];
+        if(cursorX >= values[n - 1]) return values[n - 1];
+        
+        int i   = 0;
+        int j   = n;
+        int mid = 0;
+        
+        while(i < j) {
+            mid = (i + j) / 2;
+            
+            if(values[mid] == cursorX) return values[mid]; 
+            
+            if(cursorX < values[mid]) {
+                if(mid > 0 && cursorX > values[mid - 1]) {
+                    return getClosest(values[mid - 1], values[mid], cursorX);
+                }
+                
+                j = mid;
+            } else {
+                if(mid < n - 1 && cursorX < values[mid + 1]) {
+                    return getClosest(values[mid], values[mid + 1], cursorX);
+                }
+                
+                i = mid + 1;
+            }
+        }
+        
+        return values[mid];
+    }
+    
+    protected int findClosestIndex(float cursorX) {
+        if(typed.length() <= 1) {
+            int charWidth = Font.getLengthInPixels(typed.toString());
+            return (cursorX < (charWidth / 2)) ? 0 : 1;
+        }
+        
+        List<Integer> culled = new ArrayList<>();
+        
+        //Remove numbers that are outside of the carats range
+        for(int i = 0; i < typed.length() + 1; i++) {
+            int position = Font.getLengthInPixels(typed.substring(0, i)) + textOffset;
+            
+            if(position >= 0 && position < bounds.width) {
+                culled.add(position);
+            }
+        }
+        
+        int[] values = culled.stream().mapToInt(Integer::intValue).toArray();
+        int result   = 0;
+        
+        for(int i = 0; i < typed.length() + 1; i++) {
+            if(Font.getLengthInPixels(typed.substring(0, i)) + textOffset == search(values, cursorX)) {
+                result = i;
+            }
+        }
+        
+        return result;
+    }
+    
+    protected void insertChar(char c) {
+        typed.insert(currIndex, c);
+        prevIndex = currIndex;
+        currIndex++;
+        scroll();
+    }
+    
+    public void scroll() {
+        lengthToIndex = Font.getLengthInPixels(typed.substring(0, currIndex));
+        
+        int result = (int) ((bounds.width - PADDING) - (lengthToIndex + textPos.x - (parentPosX + xOffset + PADDING)));
+        
+        if(prevIndex < currIndex) {
+            if(carat.position.x >= (parentPosX + xOffset + bounds.width) - (PADDING * 3)) {
+                textOffset = result - PADDING;
+                if(textOffset > 0) textOffset = 0;
+            }
+        } else {
+            if(carat.position.x <= parentPosX + xOffset + (PADDING * 3)) {
+                textOffset = (int) (result - bounds.width + PADDING);
+            }
+        }
+        
+        carat.position.set(
+                (xOffset + parentPosX) + (lengthToIndex + textOffset) + PADDING,
+                (yOffset + parentPosY) + HEIGHT - 5);
+    }
+    
+    public void focus() {
+        hasFocus = true;
+        UI.setTextInputWidget(this);
+        timer.start();
+    }
+    
+    protected void unfocus() {
+        hasFocus = false;
+        validate();
+    }
+    
+    protected void setIndex(int index) {
+        prevIndex = currIndex;
+        currIndex = index;
+    }
+    
+    protected void highlightText(float cursorPosX) {
+        if(typed.length() > 0 && currPressed && hasFocus) {
+            if(cursorPosX - bounds.xPos - PADDING >= bounds.width - (PADDING * 3)) {
+                setIndex((getIndex() > typed.length() - 1) ? typed.length() : getIndex() + 1);
+                scroll();
+            }
+
+            if(cursorPosX - bounds.xPos - PADDING <= (PADDING * 3)) {
+                setIndex((getIndex() <= 0) ? 0 : getIndex() - 1);
+                scroll();
+            }
+
+            if(!firstIndexSet) {
+                firstIndex    = getIndex();
+                firstIndexSet = true;
+            } else {
+                int newIndex = findClosestIndex(cursorPosX - bounds.xPos - PADDING);
+                setIndex(newIndex);
+                scroll();
+                
+                lastIndex = getIndex();
+                
+                int firstIndexPosX = Font.getLengthInPixels(typed.substring(0, firstIndex));
+                int lastIndexPosX  = Font.getLengthInPixels(typed.substring(0, lastIndex));
+
+                int minX = Math.min(firstIndexPosX, lastIndexPosX);
+                int maxX = Math.max(firstIndexPosX, lastIndexPosX);
+
+                highlight.xPos  = (minX + bounds.xPos + PADDING) + getTextOffset();
+                highlight.width = (maxX - minX);
+            }
+        }
+    }
+    
+    public void deleteSection() {
+        int min = Math.min(firstIndex, lastIndex);
+        int max = Math.max(firstIndex, lastIndex);
+
+        typed.replace(min, max, "");
+
+        setIndex(min);
+        scroll();
+
+        highlight.width = 0;
+    }
+    
+    public void setText(String text) {
+        typed.setLength(0);
+        currIndex = 0;
+        
+        for(char c : text.toCharArray()) insertChar(c);
+    }
+    
+    protected int getIndex()         { return currIndex; }
+    protected int getTextOffset()    { return textOffset; }
+    protected int getLengthToIndex() { return lengthToIndex; }
     public boolean hasFocus()        { return hasFocus; }
+    public String getText()          { return typed.toString(); }
+    
+    protected abstract void validate();
     
     public abstract void processKeyInput(int key, int action);
     
