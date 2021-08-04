@@ -2,6 +2,7 @@ package dev.theskidster.mapeditor.main;
 
 import dev.theskidster.jlogger.JLogger;
 import dev.theskidster.mapeditor.graphics.Color;
+import dev.theskidster.mapeditor.utils.Rectangle;
 import dev.theskidster.shadercore.GLProgram;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -38,7 +39,7 @@ public class Font {
     
     final String filename;
     
-    private final Map<Character, Glyph> glyphs = new HashMap<>();
+    private static final Map<Character, Glyph> glyphs = new HashMap<>();
     
     private final class Glyph {
         int advance;
@@ -211,6 +212,22 @@ public class Font {
         
         glDisable(GL_BLEND);
         App.checkGLError();
+    }
+    
+    public void drawString(String text, float xPos, float yPos, Color color, Rectangle scissorBox, GLProgram uiProgram) {
+        glEnable(GL_SCISSOR_TEST);
+        
+        glScissor((int) scissorBox.xPos, (int) scissorBox.yPos, (int) scissorBox.width, (int) scissorBox.height);
+        drawString(text, xPos, yPos, color, uiProgram);
+        
+        glDisable(GL_SCISSOR_TEST);
+    }
+    
+    public static int getLengthInPixels(String text) {
+        int length = 0;
+        for(char c : text.toCharArray()) length += (glyphs.get(c).advance >> 6);
+        
+        return length;
     }
     
 }

@@ -138,7 +138,7 @@ final class Window implements PropertyChangeListener {
         });
         
         glfwSetCursorPosCallback(handle, (window, x, y) -> {
-            ui.setMouseCursorPos(x, y);
+            ui.setMouseCursorPos(x, height - y);
             
             if(mouseLeftHeld ^ mouseMiddleHeld ^ mouseRightHeld) {
                 if(mouseMiddleHeld) camera.setPosition(x, y);

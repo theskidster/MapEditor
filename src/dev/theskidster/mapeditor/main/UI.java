@@ -22,11 +22,13 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
  * @author J Hoffman
  * @since  0.0.0
  */
-final class UI {
+public final class UI {
 
+    private static float viewportHeight;
+    
     private Font font;
     private final Mouse mouse;
-    private TextInput textInput;
+    private static TextInput textInput;
     
     private final Matrix4f projMatrix   = new Matrix4f();
     private final Background background = new Background();
@@ -37,14 +39,19 @@ final class UI {
         mouse = new Mouse(window);
         
         setFont(fontFilename, fontSize);
-        configure(window.getWidth(), window.getHeight());
         
         containers = new LinkedHashSet<>() {{
             add(new TestContainer(window.getWidth(), window.getHeight()));
         }};
+        
+        configure(window.getWidth(), window.getHeight());
     }
     
     void configure(int windowWidth, int windowHeight) {
+        viewportHeight = windowHeight;
+        
+        containers.forEach(container -> container.relocate(windowWidth, windowHeight));
+        
         projMatrix.setOrtho(0, windowWidth, 0, windowHeight, 0, Integer.MAX_VALUE);
     }
     
@@ -101,6 +108,14 @@ final class UI {
         if(textInput != null && textInput.hasFocus()) {
             textInput.processKeyInput(key, action);
         }
+    }
+    
+    public static void setTextInputWidget(TextInput input) {
+        textInput = input;
+    }
+    
+    public static float getViewportHeight() {
+        return viewportHeight;
     }
     
     public boolean containerHovered() {

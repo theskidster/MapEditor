@@ -14,6 +14,9 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public abstract class TextInput extends Widget implements Updatable, Renderable, Relocatable {
 
+    protected float xOffset;
+    protected float yOffset;
+    
     private boolean hasFocus;
     
     protected final static HashMap<Integer, Key> keyChars;
@@ -71,14 +74,15 @@ public abstract class TextInput extends Widget implements Updatable, Renderable,
         }};
     }
     
-    public TextInput(float xPos, float yPos, float width, float height) {
-        super(xPos, yPos, width, height);
+    public TextInput(float xOffset, float yOffset, float width) {
+        super(xOffset, yOffset, width, 28);
+        
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
     }
     
-    public boolean hasFocus() {
-        return hasFocus;
-    }
+    public boolean hasFocus()        { return hasFocus; }
     
     public abstract void processKeyInput(int key, int action);
-
+    
 }
