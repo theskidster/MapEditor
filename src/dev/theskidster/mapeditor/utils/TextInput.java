@@ -51,7 +51,7 @@ public abstract class TextInput extends Widget implements Updatable, Renderable,
     
     protected Rectangle highlight    = new Rectangle(0, 0, 0, HEIGHT - 4);
     protected final Timer caratTimer = new Timer(1, 18);
-    protected final Timer clickTimer = new Timer(1, 18);
+    protected final Timer clickTimer = new Timer(1, 24);
     protected final Icon carat       = new Icon(20, 20);
     
     protected final static HashMap<Integer, Key> keyChars;
@@ -229,8 +229,7 @@ public abstract class TextInput extends Widget implements Updatable, Renderable,
     protected void unfocus() {
         hasFocus = false;
         validate();
-        clickTimer.resetTime();
-        clickTimer.resetState();
+        clickTimer.restart();
     }
     
     protected void setIndex(int index) {

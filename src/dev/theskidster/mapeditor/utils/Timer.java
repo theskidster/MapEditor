@@ -15,6 +15,7 @@ public final class Timer {
     public int time;
     public int speed;
     private final int initialTime;
+    private int startTick;
     
     private boolean finished;
     private boolean start;
@@ -25,14 +26,17 @@ public final class Timer {
         initialTime = time;
     }
     
-    public void start() { start = true; }
+    public void start() {
+        start     = true;
+        startTick = App.getCurrTick();
+    }
     
     public boolean finished() { return finished; }
     
     public void update() {
         if(start) {
             if(time != 0) {
-                if(App.tick(speed)) time--;
+                if(App.tick(startTick, speed)) time--;
             } else {
                 finished = true;
             }
@@ -40,18 +44,9 @@ public final class Timer {
     }
     
     public void restart() {
-        resetTime();
-        resetState();
-        start = true;
-    }
-    
-    public void resetTime() {
-        time = initialTime;
-    }
-    
-    public void resetState() {
-        start    = false;
+        time     = initialTime;
         finished = false;
+        start();
     }
     
 }

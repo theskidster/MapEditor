@@ -258,8 +258,12 @@ public final class App {
         glClearColor(color.r, color.g, color.b, 0);
     }
     
-    public static boolean tick(int cycles) {
-        return tickCount % cycles == 0;
+    public static boolean tick(int startTick, int cycles) {
+        return (startTick - tickCount) % cycles == 0;
+    }
+    
+    public static int getCurrTick() {
+        return tickCount;
     }
     
 }

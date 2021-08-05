@@ -118,41 +118,25 @@ public class TextArea extends TextInput {
         caratTimer.update();
         clickTimer.update();
         if(caratTimer.finished()) caratIdle = true;
-        if(App.tick(18) && caratIdle) caratBlink = !caratBlink;
-        
-        System.out.println(clickTimer.finished());
+        if(App.tick(0, 18) && caratIdle) caratBlink = !caratBlink;
         
         if(hovered(mouse.cursorPos)) {
             mouse.setCursorShape(GLFW_IBEAM_CURSOR);
             
             if((prevPressed != currPressed && !prevPressed)) {
+                clickCount = (!clickTimer.finished()) ? clickCount + 1 : 0;
+                
+                if(clickCount > 0 && !clickTimer.finished() && hasFocus()) {
+                    System.out.println("highlight");
+                    //TODO: highlight section, exclude spaces, parenthesis, dashes, etc.
+                }
+                
+                clickTimer.restart();
+                
                 if(!hasFocus()) {
                     focus();
                     prevCursorX = (int) mouse.cursorPos.x;
                     scroll();
-                } else {
-                    if(!clickTimer.finished()) {
-                        clickCount++;
-                    }
-                    
-                    System.out.println(clickCount);
-                    
-                    clickTimer.restart();
-                    
-                    //clickTimer.resetState();
-                    
-                    /*
-                    if(!clickTimer.finished()) {
-                        clickCount++;
-                        //System.out.println(clickCount);
-                    }
-                    
-                    if(clickCount == 2) {
-                        System.out.println("highlight");
-                        clickCount = 0;
-                    }
-                    
-                    clickTimer.resetTime();*/
                 }
                 
                 if(typed.length() > 0) {
