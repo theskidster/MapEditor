@@ -26,7 +26,7 @@ public final class TestContainer extends Container {
         super((xPos / 2) - 250, (yPos / 2) - 200, 500, 400, "Title", 3, 4);
         
         textArea = new TextArea(20, 20, 120);
-        textArea.setText("BLEH");
+        textArea.setText("check 123");
         
         widgets = new ArrayList<>() {{
             add(textArea);

@@ -225,7 +225,7 @@ public class Font {
     
     public static int getLengthInPixels(String text) {
         int length = 0;
-        for(char c : text.toCharArray()) length += (glyphs.get(c).advance >> 6);
+        for(char c : text.toCharArray()) length += glyphs.get(c).advance;
         
         return length;
     }

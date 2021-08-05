@@ -40,9 +40,18 @@ public final class Timer {
     }
     
     public void restart() {
+        resetTime();
+        resetState();
+        start = true;
+    }
+    
+    public void resetTime() {
+        time = initialTime;
+    }
+    
+    public void resetState() {
+        start    = false;
         finished = false;
-        start    = true;
-        time     = initialTime;
     }
     
 }

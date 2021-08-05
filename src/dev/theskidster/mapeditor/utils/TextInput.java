@@ -1,5 +1,6 @@
 package dev.theskidster.mapeditor.utils;
 
+import dev.theskidster.mapeditor.graphics.Color;
 import dev.theskidster.mapeditor.graphics.Icon;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.UI;
@@ -30,6 +31,7 @@ public abstract class TextInput extends Widget implements Updatable, Renderable,
     protected int prevCursorX;
     protected int firstIndex;
     protected int lastIndex;
+    protected int clickCount;
     
     protected final float xOffset;
     protected final float yOffset;
@@ -47,9 +49,10 @@ public abstract class TextInput extends Widget implements Updatable, Renderable,
     protected final StringBuilder typed = new StringBuilder();
     protected final Vector2f textPos    = new Vector2f();
     
-    protected Rectangle highlight     = new Rectangle(0, 0, 0, HEIGHT - 2);
-    protected final Timer timer       = new Timer(1, 18);
-    protected final Icon carat        = new Icon(20, 20);
+    protected Rectangle highlight    = new Rectangle(0, 0, 0, HEIGHT - 4);
+    protected final Timer caratTimer = new Timer(1, 18);
+    protected final Timer clickTimer = new Timer(1, 18);
+    protected final Icon carat       = new Icon(20, 20);
     
     protected final static HashMap<Integer, Key> keyChars;
     
@@ -113,6 +116,7 @@ public abstract class TextInput extends Widget implements Updatable, Renderable,
         this.yOffset = yOffset;
         
         carat.setSubImage(5, 5);
+        carat.setColor(Color.UI_SLATE_GRAY);
     }
     
     private int getClosest(float value1, float value2, float target) {
@@ -212,18 +216,21 @@ public abstract class TextInput extends Widget implements Updatable, Renderable,
         
         carat.position.set(
                 (xOffset + parentPosX) + (lengthToIndex + textOffset) + PADDING,
-                (yOffset + parentPosY) + HEIGHT - 5);
+                (yOffset + parentPosY) + 4);
     }
     
     public void focus() {
         hasFocus = true;
         UI.setTextInputWidget(this);
-        timer.start();
+        caratTimer.start();
+        clickTimer.start();
     }
     
     protected void unfocus() {
         hasFocus = false;
         validate();
+        clickTimer.resetTime();
+        clickTimer.resetState();
     }
     
     protected void setIndex(int index) {

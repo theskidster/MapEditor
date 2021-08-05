@@ -35,7 +35,7 @@ public class TextArea extends TextInput {
         if(action == GLFW_PRESS || action == GLFW_REPEAT) {
             caratIdle  = false;
             caratBlink = true;
-            timer.restart();
+            caratTimer.restart();
             
             keyChars.forEach((k, c) -> {
                 if(key == k) {
@@ -99,7 +99,7 @@ public class TextArea extends TextInput {
                 }
             }
         } else {
-            timer.start();
+            caratTimer.start();
         }
         
         switch(key) {
@@ -115,9 +115,12 @@ public class TextArea extends TextInput {
         textPos.set(xOffset + parentPosX + PADDING, 
                     yOffset + parentPosY + 7);
         
-        timer.update();
-        if(timer.finished()) caratIdle = true;
+        caratTimer.update();
+        clickTimer.update();
+        if(caratTimer.finished()) caratIdle = true;
         if(App.tick(18) && caratIdle) caratBlink = !caratBlink;
+        
+        System.out.println(clickTimer.finished());
         
         if(hovered(mouse.cursorPos)) {
             mouse.setCursorShape(GLFW_IBEAM_CURSOR);
@@ -126,6 +129,30 @@ public class TextArea extends TextInput {
                 if(!hasFocus()) {
                     focus();
                     prevCursorX = (int) mouse.cursorPos.x;
+                    scroll();
+                } else {
+                    if(!clickTimer.finished()) {
+                        clickCount++;
+                    }
+                    
+                    System.out.println(clickCount);
+                    
+                    clickTimer.restart();
+                    
+                    //clickTimer.resetState();
+                    
+                    /*
+                    if(!clickTimer.finished()) {
+                        clickCount++;
+                        //System.out.println(clickCount);
+                    }
+                    
+                    if(clickCount == 2) {
+                        System.out.println("highlight");
+                        clickCount = 0;
+                    }
+                    
+                    clickTimer.resetTime();*/
                 }
                 
                 if(typed.length() > 0) {
@@ -162,11 +189,11 @@ public class TextArea extends TextInput {
         background.drawRectangle(bounds, Color.UI_MEDIUM_GRAY, uiProgram);
         
         glEnable(GL_SCISSOR_TEST);
-        //glScissor((int) bounds.xPos, (int) bounds.yPos, (int) bounds.width, (int) bounds.height);
+        glScissor((int) bounds.xPos, (int) bounds.yPos, (int) bounds.width, (int) bounds.height);
             background.drawRectangle(highlight, Color.UI_BLUE, uiProgram);
             font.drawString(typed.toString(), textPos.x + getTextOffset(), textPos.y, Color.UI_SLATE_GRAY, uiProgram);
             if(hasFocus() && caratBlink) carat.render(uiProgram);
-        //glDisable(GL_SCISSOR_TEST);
+        glDisable(GL_SCISSOR_TEST);
     }
 
     @Override
@@ -176,6 +203,8 @@ public class TextArea extends TextInput {
         
         bounds.xPos = xOffset + parentPosX;
         bounds.yPos = yOffset + parentPosY;
+        
+        highlight.yPos = bounds.yPos + 2;
     }
 
 }
