@@ -116,7 +116,6 @@ public abstract class TextInput extends Widget implements Updatable, Renderable,
         this.yOffset = yOffset;
         
         carat.setSubImage(5, 5);
-        carat.setColor(Color.UI_SLATE_GRAY);
     }
     
     private int getClosest(float value1, float value2, float target) {

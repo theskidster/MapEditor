@@ -170,12 +170,12 @@ public class TextArea extends TextInput {
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(bounds, Color.UI_MEDIUM_GRAY, uiProgram);
+        background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
         
         glEnable(GL_SCISSOR_TEST);
         glScissor((int) bounds.xPos, (int) bounds.yPos, (int) bounds.width, (int) bounds.height);
             background.drawRectangle(highlight, Color.UI_BLUE, uiProgram);
-            font.drawString(typed.toString(), textPos.x + getTextOffset(), textPos.y, Color.UI_SLATE_GRAY, uiProgram);
+            font.drawString(typed.toString(), textPos.x + getTextOffset(), textPos.y, Color.WHITE, uiProgram);
             if(hasFocus() && caratBlink) carat.render(uiProgram);
         glDisable(GL_SCISSOR_TEST);
     }
@@ -189,6 +189,11 @@ public class TextArea extends TextInput {
         bounds.yPos = yOffset + parentPosY;
         
         highlight.yPos = bounds.yPos + 2;
+        
+        /*
+        TODO: look into bug where the text area cannot be selected but can
+              after relocation occurs.
+        */
     }
 
 }
