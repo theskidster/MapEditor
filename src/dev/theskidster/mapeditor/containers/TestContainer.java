@@ -20,22 +20,28 @@ import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
  */
 public final class TestContainer extends Container {
 
-    TextArea textArea;
+    TextArea textArea1;
+    TextArea textArea2;
     
     public TestContainer(int xPos, int yPos) {
         super((xPos / 2) - 250, (yPos / 2) - 200, 500, 400, "Title", 3, 4);
         
-        textArea = new TextArea(20, 20, 120);
-        textArea.setText("check 123");
+        textArea1 = new TextArea(20, 20, 120);
+        textArea2 = new TextArea(20, 100, 300);
+        
+        textArea1.setText("check 123");
+        textArea2.setText("/dev/theskidster/assets/");
         
         widgets = new ArrayList<>() {{
-            add(textArea);
+            add(textArea1);
+            add(textArea2);
         }};
     }
 
     @Override
     public Command update(Mouse mouse) {
-        textArea.update(mouse);
+        textArea1.update(mouse);
+        textArea2.update(mouse);
         
         if(!widgetHovered(mouse.cursorPos)) {
             mouse.setCursorShape(GLFW_ARROW_CURSOR);
@@ -49,12 +55,14 @@ public final class TestContainer extends Container {
         background.drawRectangle(bounds, Color.WHITE, uiProgram);
         renderTitleBar(uiProgram, background, font);
         
-        textArea.render(uiProgram, background, font);
+        textArea1.render(uiProgram, background, font);
+        textArea2.render(uiProgram, background, font);
     }
 
     @Override
     public void relocate(float parentPosX, float parentPosY) {
-        textArea.relocate(bounds.xPos, bounds.yPos);
+        textArea1.relocate(bounds.xPos, bounds.yPos);
+        textArea2.relocate(bounds.xPos, bounds.yPos);
     }
 
 }

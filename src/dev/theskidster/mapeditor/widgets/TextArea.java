@@ -128,7 +128,7 @@ public class TextArea extends TextInput {
                 int leftIndex = 0;
                 
                 if(clickCount > 0 && !clickTimer.finished() && hasFocus()) {
-                    String[] words = typed.toString().split(" ");
+                    String[] words = typed.toString().split("\\s|/|-|\\\\");
                     int rightIndex = 0;
                     
                     for(String word : words) {
@@ -181,6 +181,8 @@ public class TextArea extends TextInput {
                 }
                 
                 firstIndexSet = false;
+            } else {
+                highlightText(mouse.cursorPos.x);
             }
         }
         
