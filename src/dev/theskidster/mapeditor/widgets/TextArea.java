@@ -124,11 +124,24 @@ public class TextArea extends TextInput {
             mouse.setCursorShape(GLFW_IBEAM_CURSOR);
             
             if((prevPressed != currPressed && !prevPressed)) {
-                clickCount = (!clickTimer.finished()) ? clickCount + 1 : 0;
+                clickCount = (!clickTimer.finished() && clickTimer.started()) ? clickCount + 1 : 0;
+                int leftIndex = 0;
                 
                 if(clickCount > 0 && !clickTimer.finished() && hasFocus()) {
-                    System.out.println("highlight");
-                    //TODO: highlight section, exclude spaces, parenthesis, dashes, etc.
+                    String[] words = typed.toString().split(" ");
+                    int rightIndex = 0;
+                    
+                    for(String word : words) {
+                        leftIndex  = typed.toString().indexOf(word);
+                        rightIndex = leftIndex + word.length() - 1;
+                        
+                        if(getIndex() >= leftIndex && getIndex() <= rightIndex) {
+                            break;
+                        }
+                    }
+                    
+                    setIndex(rightIndex + 1);
+                    scroll();
                 }
                 
                 clickTimer.restart();
@@ -140,17 +153,25 @@ public class TextArea extends TextInput {
                 }
                 
                 if(typed.length() > 0) {
-                    int newIndex = findClosestIndex(mouse.cursorPos.x - bounds.xPos - PADDING);
-                    setIndex(newIndex);
-
-                    firstIndex      = getIndex();
+                    if(clickCount == 0) {
+                        int newIndex = findClosestIndex(mouse.cursorPos.x - bounds.xPos - PADDING);
+                        setIndex(newIndex);
+                        firstIndex = getIndex();
+                        highlight.width = 0;
+                    } else {
+                        firstIndex = leftIndex;
+                    }
+                    
                     firstIndexSet   = true;
-                    highlight.width = 0;
                 }
                 
                 scroll();
             } else {
-                if(mouse.cursorPos.x != prevCursorX) highlightText(mouse.cursorPos.x);
+                if(clickCount > 0) {
+                    highlightText(carat.position.x);
+                } else {
+                    if(mouse.cursorPos.x != prevCursorX) highlightText(mouse.cursorPos.x);
+                }
             }
         } else {
             if((prevPressed != currPressed && !prevPressed)) {
@@ -160,8 +181,6 @@ public class TextArea extends TextInput {
                 }
                 
                 firstIndexSet = false;
-            } else {
-                highlightText(mouse.cursorPos.x);
             }
         }
         

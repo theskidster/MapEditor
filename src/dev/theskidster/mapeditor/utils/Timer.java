@@ -31,6 +31,7 @@ public final class Timer {
         startTick = App.getCurrTick();
     }
     
+    public boolean started()  { return start; }
     public boolean finished() { return finished; }
     
     public void update() {

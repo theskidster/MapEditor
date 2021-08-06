@@ -1,6 +1,5 @@
 package dev.theskidster.mapeditor.utils;
 
-import dev.theskidster.mapeditor.graphics.Color;
 import dev.theskidster.mapeditor.graphics.Icon;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.UI;
@@ -51,7 +50,7 @@ public abstract class TextInput extends Widget implements Updatable, Renderable,
     
     protected Rectangle highlight    = new Rectangle(0, 0, 0, HEIGHT - 4);
     protected final Timer caratTimer = new Timer(1, 18);
-    protected final Timer clickTimer = new Timer(1, 24);
+    protected final Timer clickTimer = new Timer(1, 18);
     protected final Icon carat       = new Icon(20, 20);
     
     protected final static HashMap<Integer, Key> keyChars;
