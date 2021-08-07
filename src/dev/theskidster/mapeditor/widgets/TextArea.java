@@ -210,11 +210,6 @@ public class TextArea extends TextInput {
         bounds.yPos = yOffset + parentPosY;
         
         highlight.yPos = bounds.yPos + 2;
-        
-        /*
-        TODO: look into bug where the text area cannot be selected but can
-              after relocation occurs.
-        */
     }
 
 }

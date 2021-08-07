@@ -161,7 +161,7 @@ public final class App {
         
         setClearColor(Color.BLACK);
         
-        Triangle triangle = new Triangle(0, 0, -5, 1);
+        Triangle triangle = new Triangle(0, 0, -2, 1);
         
         while(!glfwWindowShouldClose(window.handle)) {
             currTime = glfwGetTime();
