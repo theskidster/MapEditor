@@ -1,4 +1,4 @@
-package dev.theskidster.mapeditor.widgets;
+package dev.theskidster.mapeditor.controls;
 
 import dev.theskidster.mapeditor.main.Mouse;
 import dev.theskidster.mapeditor.utils.Rectangle;
@@ -12,7 +12,7 @@ import org.joml.Vector2f;
  * @author J Hoffman
  * @since  0.0.0
  */
-public class Widget {
+public class Control {
 
     private final boolean[] prevClicked = new boolean[2];
     private final boolean[] currClicked = new boolean[2];
@@ -20,7 +20,7 @@ public class Widget {
     
     protected final Rectangle bounds;
     
-    protected Widget(float xPos, float yPos, float width, float height) {
+    protected Control(float xPos, float yPos, float width, float height) {
         bounds = new Rectangle(xPos, yPos, width, height); 
     }
     

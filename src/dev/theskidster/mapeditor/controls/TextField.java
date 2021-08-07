@@ -1,4 +1,4 @@
-package dev.theskidster.mapeditor.widgets;
+package dev.theskidster.mapeditor.controls;
 
 import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.graphics.Background;
@@ -19,9 +19,9 @@ import static org.lwjgl.opengl.GL11.*;
  * @author J Hoffman
  * @since  
  */
-public class TextArea extends TextInput {
+public class TextField extends TextInput {
 
-    public TextArea(float xOffset, float yOffset, float width) {
+    public TextField(float xOffset, float yOffset, float width) {
         super(xOffset, yOffset, width);
     }
 
@@ -42,12 +42,12 @@ public class TextArea extends TextInput {
                     if(highlight.width > 0) {
                         int min = Math.min(firstIndex, lastIndex);
                         int max = Math.max(firstIndex, lastIndex);
-
+                        
                         typed.replace(min, max, "");
-
+                        
                         setIndex(min);
                         scroll();
-
+                        
                         highlight.width = 0;
                     }
                     

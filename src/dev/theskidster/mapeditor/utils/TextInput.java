@@ -3,7 +3,7 @@ package dev.theskidster.mapeditor.utils;
 import dev.theskidster.mapeditor.graphics.Icon;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.UI;
-import dev.theskidster.mapeditor.widgets.Widget;
+import dev.theskidster.mapeditor.controls.Control;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +18,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * @author J Hoffman
  * @since  
  */
-public abstract class TextInput extends Widget implements Updatable, Renderable, Relocatable {
+public abstract class TextInput extends Control implements Updatable, Renderable, Relocatable {
 
     protected final int HEIGHT  = 28;
     protected final int PADDING = 6;

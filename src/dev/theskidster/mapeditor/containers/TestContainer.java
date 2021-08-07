@@ -22,14 +22,14 @@ public final class TestContainer extends Container {
     public TestContainer(int xPos, int yPos) {
         super((xPos / 2) - 250, (yPos / 2) - 200, 500, 400, "Title", 3, 4);
         
-        widgets = new ArrayList<>() {{
-            
+        controls = new ArrayList<>() {{
         }};
     }
 
     @Override
     public Command update(Mouse mouse) {        
-        if(!widgetHovered(mouse.cursorPos)) {
+        
+        if(!controlHovered(mouse.cursorPos)) {
             mouse.setCursorShape(GLFW_ARROW_CURSOR);
         }
         
@@ -44,7 +44,6 @@ public final class TestContainer extends Container {
 
     @Override
     public void relocate(float parentPosX, float parentPosY) {
-        
     }
 
 }

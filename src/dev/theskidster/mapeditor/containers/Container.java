@@ -8,7 +8,7 @@ import dev.theskidster.mapeditor.utils.Rectangle;
 import dev.theskidster.mapeditor.utils.Relocatable;
 import dev.theskidster.mapeditor.utils.Renderable;
 import dev.theskidster.mapeditor.utils.Updatable;
-import dev.theskidster.mapeditor.widgets.Widget;
+import dev.theskidster.mapeditor.controls.Control;
 import dev.theskidster.shadercore.GLProgram;
 import java.util.List;
 import org.joml.Vector2f;
@@ -21,13 +21,13 @@ import org.joml.Vector2f;
  * @author J Hoffman
  * @since  0.0.0
  */
-public abstract class Container extends Widget implements Updatable, Renderable, Relocatable {
+public abstract class Container extends Control implements Updatable, Renderable, Relocatable {
 
     protected String title;
     protected Icon icon;
     protected Rectangle titleBar;
     
-    public List<Widget> widgets;
+    public List<Control> controls;
     
     protected Container(float xPos, float yPos, float width, float height, String title, int cellX, int cellY) {
         super(xPos, yPos, width, height);
@@ -54,8 +54,8 @@ public abstract class Container extends Widget implements Updatable, Renderable,
         icon.position.set(bounds.xPos + 10, bounds.yPos + 30);
     }
     
-    protected boolean widgetHovered(Vector2f cursorPos) {
-        return widgets.stream().anyMatch(widget -> widget.hovered(cursorPos));
+    protected boolean controlHovered(Vector2f cursorPos) {
+        return controls.stream().anyMatch(widget -> widget.hovered(cursorPos));
     }
 
 }
