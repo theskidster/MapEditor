@@ -41,9 +41,9 @@ public abstract class Container extends Control implements Updatable, Renderable
     }
     
     protected void renderTitleBar(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(titleBar, Color.UI_BLUE, uiProgram);
+        background.drawRectangle(titleBar, Color.UI_DARK_GRAY, uiProgram);
         icon.render(uiProgram);
-        font.drawString(title, titleBar.xPos + 36, titleBar.yPos + 10, Color.WHITE, uiProgram);
+        font.drawString(title, titleBar.xPos + 36, titleBar.yPos + 10, Color.SILVER, uiProgram);
     }
     
     protected void relocateTitleBar() {

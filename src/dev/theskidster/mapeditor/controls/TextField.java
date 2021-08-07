@@ -21,8 +21,10 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class TextField extends TextInput {
 
-    public TextField(float xOffset, float yOffset, float width) {
+    public TextField(float xOffset, float yOffset, float width, String text) {
         super(xOffset, yOffset, width);
+        
+        if(text != null) setText(text);
     }
 
     @Override
@@ -191,12 +193,12 @@ public class TextField extends TextInput {
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
+        background.drawRectangle(bounds, Color.UI_DARK_GRAY, uiProgram);
         
         glEnable(GL_SCISSOR_TEST);
         glScissor((int) bounds.xPos, (int) bounds.yPos, (int) bounds.width, (int) bounds.height);
             background.drawRectangle(highlight, Color.UI_BLUE, uiProgram);
-            font.drawString(typed.toString(), textPos.x + getTextOffset(), textPos.y, Color.WHITE, uiProgram);
+            font.drawString(typed.toString(), textPos.x + getTextOffset(), textPos.y, Color.SILVER, uiProgram);
             if(hasFocus() && caratBlink) carat.render(uiProgram);
         glDisable(GL_SCISSOR_TEST);
     }

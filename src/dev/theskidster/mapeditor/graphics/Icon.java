@@ -19,7 +19,7 @@ import org.lwjgl.system.MemoryStack;
 public final class Icon {
 
     private final Atlas atlas;
-    private Color color             = Color.WHITE;
+    private Color color             = Color.SILVER;
     private Vector2f currCell       = new Vector2f();
     private final Vector2i tempCell = new Vector2i();
     public final Vector2f position  = new Vector2f();

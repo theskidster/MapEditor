@@ -281,7 +281,7 @@ public abstract class TextInput extends Control implements Updatable, Renderable
         highlight.width = 0;
     }
     
-    public void setText(String text) {
+    public final void setText(String text) {
         typed.setLength(0);
         currIndex = 0;
         
