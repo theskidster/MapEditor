@@ -1,4 +1,4 @@
-package dev.theskidster.mapeditor.containers;
+package dev.theskidster.mapeditor.tabs;
 
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.graphics.Color;
@@ -21,7 +21,7 @@ import org.joml.Vector2f;
  * @author J Hoffman
  * @since  0.0.0
  */
-public abstract class Container extends Control implements Updatable, Renderable, Relocatable {
+public abstract class Tab extends Control implements Updatable, Renderable, Relocatable {
 
     protected String title;
     protected Icon icon;
@@ -29,7 +29,7 @@ public abstract class Container extends Control implements Updatable, Renderable
     
     public List<Control> controls;
     
-    protected Container(float xPos, float yPos, float width, float height, String title, int cellX, int cellY) {
+    protected Tab(float xPos, float yPos, float width, float height, String title, int cellX, int cellY) {
         super(xPos, yPos, width, height);
         this.title = title;
         

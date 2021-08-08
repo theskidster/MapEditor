@@ -2,8 +2,8 @@ package dev.theskidster.mapeditor.main;
 
 import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.commands.CommandHistory;
-import dev.theskidster.mapeditor.containers.Container;
-import dev.theskidster.mapeditor.containers.TestContainer;
+import dev.theskidster.mapeditor.tabs.Tab;
+import dev.theskidster.mapeditor.tabs.TestTab;
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.utils.TextInput;
 import dev.theskidster.shadercore.GLProgram;
@@ -33,15 +33,15 @@ public final class UI {
     private final Matrix4f projMatrix   = new Matrix4f();
     private final Background background = new Background();
     
-    private final LinkedHashSet<Container> containers;
+    private final LinkedHashSet<Tab> tabs;
     
     UI(Window window, String fontFilename, int fontSize) {
         mouse = new Mouse(window);
         
         setFont(fontFilename, fontSize);
         
-        containers = new LinkedHashSet<>() {{
-            add(new TestContainer(window.getWidth(), window.getHeight()));
+        tabs = new LinkedHashSet<>() {{
+            add(new TestTab(window.getWidth(), window.getHeight()));
         }};
         
         configure(window.getWidth(), window.getHeight());
@@ -50,27 +50,27 @@ public final class UI {
     void configure(int windowWidth, int windowHeight) {
         viewportHeight = windowHeight;
         
-        containers.forEach(container -> container.relocate(windowWidth, windowHeight));
+        tabs.forEach(tab -> tab.relocate(windowWidth, windowHeight));
         
         projMatrix.setOrtho(0, windowWidth, 0, windowHeight, 0, Integer.MAX_VALUE);
     }
     
     void update(CommandHistory cmdHistory) {
-        containers.forEach(container -> {
-            Command command = container.update(mouse);
+        tabs.forEach(tab -> {
+            Command command = tab.update(mouse);
             if(command != null) cmdHistory.executeCommand(command);
         });
         
-        containers.removeIf(container -> container.removalRequested());
+        tabs.removeIf(tab -> tab.removalRequested());
         
-        if(!containerHovered()) mouse.setCursorShape(GLFW_ARROW_CURSOR);
+        if(!tabHovered()) mouse.setCursorShape(GLFW_ARROW_CURSOR);
         
         mouse.scrolled = false;
     }
     
     void render(GLProgram uiProgram) {
         uiProgram.setUniform("uProjection", false, projMatrix);
-        containers.forEach(container -> container.render(uiProgram, background, font));
+        tabs.forEach(tab -> tab.render(uiProgram, background, font));
     }
     
     String getFontFilename() {
@@ -118,8 +118,8 @@ public final class UI {
         return viewportHeight;
     }
     
-    public boolean containerHovered() {
-        return containers.stream().anyMatch(container -> container.hovered(mouse.cursorPos));
+    public boolean tabHovered() {
+        return tabs.stream().anyMatch(tab -> tab.hovered(mouse.cursorPos));
     }
     
 }
