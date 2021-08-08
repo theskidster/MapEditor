@@ -1,4 +1,4 @@
-package dev.theskidster.mapeditor.tabs;
+package dev.theskidster.mapeditor.containers;
 
 import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.graphics.Background;
@@ -17,10 +17,10 @@ import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
  * @author J Hoffman
  * @since  
  */
-public final class TestTab extends Tab {
+public final class TestContainer extends Container {
     
-    public TestTab(int xPos, int yPos) {
-        super((xPos / 2) - 250, (yPos / 2) - 200, 500, 400, "Title", 3, 4);
+    public TestContainer(int xPos, int yPos) {
+        super((xPos / 2) - 250, (yPos / 2) - 200, 500, 400, "Title", 1, 5);
         
         controls = new ArrayList<>() {{
             
@@ -40,10 +40,12 @@ public final class TestTab extends Tab {
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
         background.drawRectangle(bounds, Color.UI_MEDIUM_GRAY, uiProgram);
+        renderTitleBar(uiProgram, background, font);
     }
 
     @Override
     public void relocate(float parentPosX, float parentPosY) {
+        relocateTitleBar();
     }
 
 }

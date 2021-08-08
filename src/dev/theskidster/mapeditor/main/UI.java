@@ -2,10 +2,9 @@ package dev.theskidster.mapeditor.main;
 
 import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.commands.CommandHistory;
-import dev.theskidster.mapeditor.tabs.Tab;
-import dev.theskidster.mapeditor.tabs.TestTab;
+import dev.theskidster.mapeditor.containers.Container;
+import dev.theskidster.mapeditor.containers.TestContainer;
 import dev.theskidster.mapeditor.graphics.Background;
-import dev.theskidster.mapeditor.graphics.Color;
 import dev.theskidster.mapeditor.utils.Rectangle;
 import dev.theskidster.mapeditor.utils.TextInput;
 import dev.theskidster.shadercore.GLProgram;
@@ -34,9 +33,8 @@ public final class UI {
     
     private final Matrix4f projMatrix   = new Matrix4f();
     private final Background background = new Background();
-    private final Rectangle[] borders   = new Rectangle[4];
     
-    private final LinkedHashSet<Tab> tabs;
+    private final LinkedHashSet<Container> containers;
     
     private final ArrayList<Rectangle> tabLayout = new ArrayList<>();
     
@@ -46,42 +44,28 @@ public final class UI {
         
         setFont(fontFilename, fontSize);
         
-        tabs = new LinkedHashSet<>() {{
-            add(new TestTab(window.getWidth(), window.getHeight()));
+        containers = new LinkedHashSet<>() {{
+            add(new TestContainer(window.getWidth(), window.getHeight()));
         }};
-        
-        //TODO: load layout from config.
-        
-        borders[0] = new Rectangle(14, window.getHeight() - 42, window.getWidth() - 28, 14);
-        borders[1] = new Rectangle(window.getWidth() - 14, 0, 14, window.getHeight() - 28);
-        borders[2] = new Rectangle(14, 0, window.getWidth() - 28, 14);
-        borders[3] = new Rectangle(0, 0, 14, window.getHeight() - 28);
         
         configure(window.getWidth(), window.getHeight());
     }
     
     void configure(int windowWidth, int windowHeight) {
-        tabs.forEach(tab -> tab.relocate(windowWidth, windowHeight));
-        
-        borders[0].yPos   = windowHeight - 42;
-        borders[0].width  = windowWidth - 28;
-        borders[1].xPos   = windowWidth - 14;
-        borders[1].height = windowHeight - 28;
-        borders[2].width  = windowWidth - 28;
-        borders[3].height = windowHeight - 28;
+        containers.forEach(tab -> tab.relocate(windowWidth, windowHeight));
         
         projMatrix.setOrtho(0, windowWidth, 0, windowHeight, 0, Integer.MAX_VALUE);
     }
     
     void update(CommandHistory cmdHistory) {
-        tabs.forEach(tab -> {
-            Command command = tab.update(mouse);
+        containers.forEach(container -> {
+            Command command = container.update(mouse);
             if(command != null) cmdHistory.executeCommand(command);
         });
         
-        tabs.removeIf(tab -> tab.removalRequested());
+        containers.removeIf(container -> container.removalRequested());
         
-        if(!tabHovered()) mouse.setCursorShape(GLFW_ARROW_CURSOR);
+        if(!containerHovered()) mouse.setCursorShape(GLFW_ARROW_CURSOR);
         
         mouse.scrolled = false;
     }
@@ -89,16 +73,7 @@ public final class UI {
     void render(GLProgram uiProgram) {
         uiProgram.setUniform("uProjection", false, projMatrix);
         
-        for(int r = 0; r < borders.length; r++) {
-            switch(r) {
-                case 0 -> background.drawRectangle(borders[r], Color.RED, uiProgram);
-                case 1 -> background.drawRectangle(borders[r], Color.GREEN, uiProgram);
-                case 2 -> background.drawRectangle(borders[r], Color.BLUE, uiProgram);
-                case 3 -> background.drawRectangle(borders[r], Color.YELLOW, uiProgram);
-            }
-        }
-        
-        tabs.forEach(tab -> tab.render(uiProgram, background, font));
+        containers.forEach(container -> container.render(uiProgram, background, font));
     }
     
     String getFontFilename() {
@@ -142,8 +117,8 @@ public final class UI {
         textInput = input;
     }
     
-    public boolean tabHovered() {
-        return tabs.stream().anyMatch(tab -> tab.hovered(mouse.cursorPos));
+    public boolean containerHovered() {
+        return containers.stream().anyMatch(container -> container.hovered(mouse.cursorPos));
     }
     
 }

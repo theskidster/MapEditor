@@ -1,4 +1,4 @@
-package dev.theskidster.mapeditor.tabs;
+package dev.theskidster.mapeditor.containers;
 
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.graphics.Color;
@@ -21,7 +21,7 @@ import org.joml.Vector2f;
  * @author J Hoffman
  * @since  0.0.0
  */
-public abstract class Tab extends Control implements Updatable, Renderable, Relocatable {
+public abstract class Container extends Control implements Updatable, Renderable, Relocatable {
 
     protected String title;
     protected Icon icon;
@@ -29,7 +29,7 @@ public abstract class Tab extends Control implements Updatable, Renderable, Relo
     
     public List<Control> controls;
     
-    protected Tab(float xPos, float yPos, float width, float height, String title, int cellX, int cellY) {
+    protected Container(float xPos, float yPos, float width, float height, String title, int cellX, int cellY) {
         super(xPos, yPos, width, height);
         this.title = title;
         
@@ -37,21 +37,21 @@ public abstract class Tab extends Control implements Updatable, Renderable, Relo
         
         icon = new Icon(20, 20);
         icon.setSubImage(cellX, cellY);
-        icon.position.set(titleBar.xPos + 8, titleBar.yPos + 7);
+        icon.position.set(titleBar.xPos + 7, titleBar.yPos + 7);
     }
     
     protected void renderTitleBar(GLProgram uiProgram, Background background, Font font) {
         background.drawRectangle(titleBar, Color.UI_DARK_GRAY, uiProgram);
         icon.render(uiProgram);
-        font.drawString(title, titleBar.xPos + 36, titleBar.yPos + 10, Color.SILVER, uiProgram);
+        font.drawString(title, titleBar.xPos + 34, titleBar.yPos + 10, Color.SILVER, uiProgram);
     }
     
     protected void relocateTitleBar() {
         titleBar.xPos  = bounds.xPos;
-        titleBar.yPos  = bounds.yPos;
+        titleBar.yPos  = bounds.yPos + bounds.height;
         titleBar.width = bounds.width;
         
-        icon.position.set(bounds.xPos + 10, bounds.yPos + 30);
+        icon.position.set(bounds.xPos + 7, bounds.yPos + bounds.height + 7);
     }
     
     protected boolean controlHovered(Vector2f cursorPos) {
