@@ -5,8 +5,11 @@ import dev.theskidster.mapeditor.commands.CommandHistory;
 import dev.theskidster.mapeditor.tabs.Tab;
 import dev.theskidster.mapeditor.tabs.TestTab;
 import dev.theskidster.mapeditor.graphics.Background;
+import dev.theskidster.mapeditor.graphics.Color;
+import dev.theskidster.mapeditor.utils.Rectangle;
 import dev.theskidster.mapeditor.utils.TextInput;
 import dev.theskidster.shadercore.GLProgram;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import org.joml.Matrix4f;
 import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
@@ -23,20 +26,23 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
  * @since  0.0.0
  */
 public final class UI {
-
-    private static float viewportHeight;
     
     private Font font;
     private final Mouse mouse;
+    private final MenuBar menuBar;
     private static TextInput textInput;
     
     private final Matrix4f projMatrix   = new Matrix4f();
     private final Background background = new Background();
+    private final Rectangle[] borders   = new Rectangle[4];
     
     private final LinkedHashSet<Tab> tabs;
     
+    private final ArrayList<Rectangle> tabLayout = new ArrayList<>();
+    
     UI(Window window, String fontFilename, int fontSize) {
-        mouse = new Mouse(window);
+        mouse   = new Mouse(window);
+        menuBar = new MenuBar();
         
         setFont(fontFilename, fontSize);
         
@@ -44,13 +50,25 @@ public final class UI {
             add(new TestTab(window.getWidth(), window.getHeight()));
         }};
         
+        //TODO: load layout from config.
+        
+        borders[0] = new Rectangle(14, window.getHeight() - 42, window.getWidth() - 28, 14);
+        borders[1] = new Rectangle(window.getWidth() - 14, 0, 14, window.getHeight() - 28);
+        borders[2] = new Rectangle(14, 0, window.getWidth() - 28, 14);
+        borders[3] = new Rectangle(0, 0, 14, window.getHeight() - 28);
+        
         configure(window.getWidth(), window.getHeight());
     }
     
     void configure(int windowWidth, int windowHeight) {
-        viewportHeight = windowHeight;
-        
         tabs.forEach(tab -> tab.relocate(windowWidth, windowHeight));
+        
+        borders[0].yPos   = windowHeight - 42;
+        borders[0].width  = windowWidth - 28;
+        borders[1].xPos   = windowWidth - 14;
+        borders[1].height = windowHeight - 28;
+        borders[2].width  = windowWidth - 28;
+        borders[3].height = windowHeight - 28;
         
         projMatrix.setOrtho(0, windowWidth, 0, windowHeight, 0, Integer.MAX_VALUE);
     }
@@ -70,6 +88,16 @@ public final class UI {
     
     void render(GLProgram uiProgram) {
         uiProgram.setUniform("uProjection", false, projMatrix);
+        
+        for(int r = 0; r < borders.length; r++) {
+            switch(r) {
+                case 0 -> background.drawRectangle(borders[r], Color.RED, uiProgram);
+                case 1 -> background.drawRectangle(borders[r], Color.GREEN, uiProgram);
+                case 2 -> background.drawRectangle(borders[r], Color.BLUE, uiProgram);
+                case 3 -> background.drawRectangle(borders[r], Color.YELLOW, uiProgram);
+            }
+        }
+        
         tabs.forEach(tab -> tab.render(uiProgram, background, font));
     }
     
@@ -112,10 +140,6 @@ public final class UI {
     
     public static void setTextInputWidget(TextInput input) {
         textInput = input;
-    }
-    
-    public static float getViewportHeight() {
-        return viewportHeight;
     }
     
     public boolean tabHovered() {
