@@ -22,6 +22,9 @@ import org.joml.Vector2f;
  */
 public abstract class Container extends Control {
 
+    private final float minWidth;
+    private final float minHeight;
+    
     private boolean allowMove;
     private boolean collapsed;
     private boolean prevClicked;
@@ -38,13 +41,15 @@ public abstract class Container extends Control {
     
     protected List<Control> controls;
     
-    protected Container(float xPos, float yPos, float width, float height, String title, int cellX, int cellY) {
-        super(xPos, yPos, width, height);
-        this.title = title;
+    protected Container(float xPos, float yPos, float minWidth, float minHeight, String title, int cellX, int cellY) {
+        super(xPos, yPos, minWidth, minHeight);
+        this.title     = title;
+        this.minWidth  = minWidth;
+        this.minHeight = minHeight;
         
-        titleBar   = new Rectangle(xPos, yPos + height - 34, width, 34);
-        buttons[0] = new Rectangle((xPos + width) - 34, titleBar.yPos, 34, 34);
-        buttons[1] = new Rectangle((xPos + width) - 68, titleBar.yPos, 34, 34);
+        titleBar   = new Rectangle(xPos, yPos + minHeight - 34, minWidth, 34);
+        buttons[0] = new Rectangle((xPos + minWidth) - 34, titleBar.yPos, 34, 34);
+        buttons[1] = new Rectangle((xPos + minWidth) - 68, titleBar.yPos, 34, 34);
         buttons[2] = new Rectangle();
         
         icons[0] = new Icon(20, 20);
@@ -65,6 +70,9 @@ public abstract class Container extends Control {
     
     @Override
     public Command update(Mouse mouse) {
+        if(bounds.width < minWidth) bounds.width = minWidth;
+        if(bounds.height < minHeight) bounds.height = minHeight;
+        
         if(!buttons[0].contains(mouse.cursorPos) && !buttons[1].contains(mouse.cursorPos)) {
             if(mouse.clicked) {
                 if(titleBar.contains(mouse.cursorPos) && !allowMove) {
