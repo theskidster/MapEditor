@@ -3,9 +3,11 @@ package dev.theskidster.mapeditor.controls;
 import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.graphics.Color;
+import dev.theskidster.mapeditor.graphics.Icon;
 import dev.theskidster.mapeditor.main.App;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
+import dev.theskidster.mapeditor.utils.Rectangle;
 import dev.theskidster.mapeditor.utils.TextInput;
 import dev.theskidster.shadercore.GLProgram;
 import static org.lwjgl.glfw.GLFW.*;
@@ -19,12 +21,27 @@ import static org.lwjgl.opengl.GL11.*;
  * @author J Hoffman
  * @since  
  */
-public class TextField extends TextInput {
+public class TextArea extends TextInput {
 
-    public TextField(float xOffset, float yOffset, float width, String text) {
+    private final boolean borderVisible;
+    
+    private Rectangle outline;
+    private final Icon leftBorder  = new Icon(15, 30);
+    private final Icon rightBorder = new Icon(15, 30);
+    
+    public TextArea(float xOffset, float yOffset, float width, String text, boolean borderVisible) {
         super(xOffset, yOffset, width);
-        
         if(text != null) setText(text);
+        this.borderVisible = borderVisible;
+        
+        if(borderVisible) {
+            outline = new Rectangle(xOffset - 1, yOffset - 1, width + 2, bounds.height + 2);
+            
+            leftBorder.setSubImage(8, 1);
+            leftBorder.setColor(Color.WHITE);
+            rightBorder.setSubImage(9, 1);
+            rightBorder.setColor(Color.WHITE);
+        }
     }
 
     @Override
@@ -193,12 +210,13 @@ public class TextField extends TextInput {
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(bounds, Color.UI_DARK_GRAY, uiProgram);
+        if(borderVisible) background.drawRectangle(outline, Color.UI_LIGHT_GRAY, uiProgram);
+        background.drawRectangle(bounds, Color.UI_MEDIUM_GRAY, uiProgram);
         
         glEnable(GL_SCISSOR_TEST);
         glScissor((int) bounds.xPos, (int) bounds.yPos, (int) bounds.width, (int) bounds.height);
             background.drawRectangle(highlight, Color.UI_BLUE, uiProgram);
-            font.drawString(typed.toString(), textPos.x + getTextOffset(), textPos.y, Color.SILVER, uiProgram);
+            font.drawString(typed.toString(), textPos.x + getTextOffset(), textPos.y, Color.UI_WHITE, uiProgram);
             if(hasFocus() && caratBlink) carat.render(uiProgram);
         glDisable(GL_SCISSOR_TEST);
     }
@@ -212,6 +230,16 @@ public class TextField extends TextInput {
         bounds.yPos = yOffset + parentPosY;
         
         highlight.yPos = bounds.yPos + 2;
+        
+        if(borderVisible) {
+            outline.xPos   = bounds.xPos - 1;
+            outline.yPos   = bounds.yPos - 1;
+            outline.width  = bounds.width + 2;
+            outline.height = bounds.height + 2;
+            
+            leftBorder.position.set(bounds.xPos, bounds.yPos + HEIGHT);
+            rightBorder.position.set(bounds.xPos + (bounds.width - 14), leftBorder.position.y);
+        }
     }
 
 }

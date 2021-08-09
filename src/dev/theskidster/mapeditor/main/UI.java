@@ -28,7 +28,6 @@ public final class UI {
     
     private Font font;
     private final Mouse mouse;
-    private final MenuBar menuBar;
     private static TextInput textInput;
     
     private final Matrix4f projMatrix   = new Matrix4f();
@@ -39,8 +38,7 @@ public final class UI {
     private final ArrayList<Rectangle> tabLayout = new ArrayList<>();
     
     UI(Window window, String fontFilename, int fontSize) {
-        mouse   = new Mouse(window);
-        menuBar = new MenuBar();
+        mouse = new Mouse(window);
         
         setFont(fontFilename, fontSize);
         

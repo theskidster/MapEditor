@@ -18,7 +18,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * @author J Hoffman
  * @since  
  */
-public abstract class TextInput extends Control implements Updatable, Renderable, Relocatable {
+public abstract class TextInput extends Control {
 
     protected final int HEIGHT  = 28;
     protected final int PADDING = 6;

@@ -4,9 +4,6 @@ import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
-import dev.theskidster.mapeditor.utils.Relocatable;
-import dev.theskidster.mapeditor.utils.Renderable;
-import dev.theskidster.mapeditor.utils.Updatable;
 import dev.theskidster.shadercore.GLProgram;
 
 /**
@@ -17,7 +14,7 @@ import dev.theskidster.shadercore.GLProgram;
  * @author J Hoffman
  * @since  
  */
-public class ScrollBar extends Control implements Updatable, Renderable, Relocatable {
+public class ScrollBar extends Control {
 
     private Control parent;
     
@@ -37,7 +34,5 @@ public class ScrollBar extends Control implements Updatable, Renderable, Relocat
     @Override
     public void relocate(float parentPosX, float parentPosY) {
     }
-
-    
     
 }

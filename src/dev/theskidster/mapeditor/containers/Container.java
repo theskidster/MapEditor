@@ -5,9 +5,6 @@ import dev.theskidster.mapeditor.graphics.Color;
 import dev.theskidster.mapeditor.graphics.Icon;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.utils.Rectangle;
-import dev.theskidster.mapeditor.utils.Relocatable;
-import dev.theskidster.mapeditor.utils.Renderable;
-import dev.theskidster.mapeditor.utils.Updatable;
 import dev.theskidster.mapeditor.controls.Control;
 import dev.theskidster.shadercore.GLProgram;
 import java.util.List;
@@ -21,7 +18,7 @@ import org.joml.Vector2f;
  * @author J Hoffman
  * @since  0.0.0
  */
-public abstract class Container extends Control implements Updatable, Renderable, Relocatable {
+public abstract class Container extends Control {
 
     protected String title;
     protected Icon icon;
@@ -41,9 +38,9 @@ public abstract class Container extends Control implements Updatable, Renderable
     }
     
     protected void renderTitleBar(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(titleBar, Color.UI_DARK_GRAY, uiProgram);
+        background.drawRectangle(titleBar, Color.UI_SLATE_GRAY, uiProgram);
         icon.render(uiProgram);
-        font.drawString(title, titleBar.xPos + 34, titleBar.yPos + 10, Color.SILVER, uiProgram);
+        font.drawString(title, titleBar.xPos + 34, titleBar.yPos + 10, Color.UI_WHITE, uiProgram);
     }
     
     protected void relocateTitleBar() {
@@ -55,7 +52,11 @@ public abstract class Container extends Control implements Updatable, Renderable
     }
     
     protected boolean controlHovered(Vector2f cursorPos) {
-        return controls.stream().anyMatch(widget -> widget.hovered(cursorPos));
+        return controls.stream().anyMatch(control -> control.hovered(cursorPos));
+    }
+    
+    public void moveTo(int xPos, int yPos) {
+        
     }
 
 }

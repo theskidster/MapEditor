@@ -33,14 +33,14 @@ public class Color {
     public static final Color BROWN   = new Color(102, 51, 0);
     
     //Map Editor UI colors:
-    public static final Color UI_LIGHT_GRAY  = new Color(92, 97, 100);
-    public static final Color UI_MEDIUM_GRAY = new Color(69, 73, 74);
-    public static final Color UI_DARK_GRAY   = new Color(53, 62, 64);
-    public static final Color UI_SLATE_GRAY  = new Color(46, 49, 51);
-    public static final Color UI_RED         = new Color(253, 49, 34);
-    public static final Color UI_ORANGE      = new Color(243, 146, 16);
-    public static final Color UI_BLUE        = new Color(75, 110, 175);
-    public static final Color UI_PEACH       = new Color(242, 234, 194);
+    public static final Color UI_WHITE       = new Color(215, 216, 224);
+    public static final Color UI_LIGHT_GRAY  = new Color(83, 87, 116);
+    public static final Color UI_MEDIUM_GRAY = new Color(64, 68, 93);
+    public static final Color UI_DARK_GRAY   = new Color(41, 45, 62);
+    public static final Color UI_SLATE_GRAY  = new Color(32, 35, 51);
+    public static final Color UI_RED         = new Color(232, 17, 35);
+    public static final Color UI_GREEN       = new Color(4, 186, 0);
+    public static final Color UI_BLUE        = new Color(51, 102, 204);
     
     public final float r;
     public final float g;

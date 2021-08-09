@@ -1,7 +1,11 @@
 package dev.theskidster.mapeditor.controls;
 
+import dev.theskidster.mapeditor.commands.Command;
+import dev.theskidster.mapeditor.graphics.Background;
+import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
 import dev.theskidster.mapeditor.utils.Rectangle;
+import dev.theskidster.shadercore.GLProgram;
 import org.joml.Vector2f;
 
 /**
@@ -12,7 +16,7 @@ import org.joml.Vector2f;
  * @author J Hoffman
  * @since  0.0.0
  */
-public class Control {
+public abstract class Control {
 
     private final boolean[] prevClicked = new boolean[2];
     private final boolean[] currClicked = new boolean[2];
@@ -46,5 +50,11 @@ public class Control {
     public void remove() {
         remove = true;
     }
+
+    public abstract Command update(Mouse mouse);
+    
+    public abstract void render(GLProgram uiProgram, Background background, Font font);
+    
+    public abstract void relocate(float parentPosX, float parentPosY);
     
 }
