@@ -51,10 +51,10 @@ public abstract class Container extends Control {
         //if(bounds.yPos - bounds.height > )
         
         titleBar.xPos  = bounds.xPos;
-        titleBar.yPos  = bounds.yPos + bounds.height;
+        titleBar.yPos  = bounds.yPos + bounds.height - 34;
         titleBar.width = bounds.width;
         
-        icon.position.set(bounds.xPos + 7, bounds.yPos + bounds.height + 7);
+        icon.position.set(bounds.xPos + 7, titleBar.yPos + 7);
         
         controls.forEach(control -> control.relocate(bounds.xPos, bounds.yPos));
     }

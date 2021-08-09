@@ -219,6 +219,11 @@ public class TextArea extends TextInput {
             font.drawString(typed.toString(), textPos.x + getTextOffset(), textPos.y, Color.UI_WHITE, uiProgram);
             if(hasFocus() && caratBlink) carat.render(uiProgram);
         glDisable(GL_SCISSOR_TEST);
+        
+        if(borderVisible) {
+            leftBorder.render(uiProgram);
+            rightBorder.render(uiProgram);
+        }
     }
 
     @Override
@@ -237,8 +242,8 @@ public class TextArea extends TextInput {
             outline.width  = bounds.width + 2;
             outline.height = bounds.height + 2;
             
-            leftBorder.position.set(bounds.xPos, bounds.yPos + HEIGHT);
-            rightBorder.position.set(bounds.xPos + (bounds.width - 14), leftBorder.position.y);
+            leftBorder.position.set(outline.xPos, outline.yPos);
+            rightBorder.position.set(outline.xPos + (outline.width - 15), leftBorder.position.y);
         }
     }
 
