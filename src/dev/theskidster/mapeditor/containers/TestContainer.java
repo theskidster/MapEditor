@@ -34,6 +34,8 @@ public final class TestContainer extends Container {
 
     @Override
     public Command update(Mouse mouse) {
+        drag(mouse);
+        
         textArea.update(mouse);
         
         if(!controlHovered(mouse.cursorPos)) {
@@ -45,9 +47,7 @@ public final class TestContainer extends Container {
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(bounds, Color.UI_DARK_GRAY, uiProgram);
-        renderTitleBar(uiProgram, background, font);
-        
+        renderContainer(uiProgram, background, font);
         textArea.render(uiProgram, background, font);
     }
 
