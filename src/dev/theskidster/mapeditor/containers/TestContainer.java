@@ -33,8 +33,7 @@ public final class TestContainer extends Container {
     }
 
     @Override
-    public Command update(Mouse mouse) {
-        drag(mouse);
+    public Command updateAdjunct(Mouse mouse) {
         
         textArea.update(mouse);
         
@@ -46,8 +45,7 @@ public final class TestContainer extends Container {
     }
 
     @Override
-    public void render(GLProgram uiProgram, Background background, Font font) {
-        renderContainer(uiProgram, background, font);
+    public void renderAdjunct(GLProgram uiProgram, Background background, Font font) {
         textArea.render(uiProgram, background, font);
     }
 
