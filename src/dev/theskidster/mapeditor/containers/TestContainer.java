@@ -51,11 +51,4 @@ public final class TestContainer extends Container {
         textArea.render(uiProgram, background, font);
     }
 
-    @Override
-    public void relocate(float parentPosX, float parentPosY) {
-        relocateTitleBar();
-        
-        textArea.relocate(bounds.xPos, bounds.yPos);
-    }
-
 }

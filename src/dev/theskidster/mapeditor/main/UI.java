@@ -50,8 +50,7 @@ public final class UI {
     }
     
     void configure(int windowWidth, int windowHeight) {
-        containers.forEach(tab -> tab.relocate(windowWidth, windowHeight));
-        
+        containers.forEach(container -> container.relocate(windowWidth, windowHeight));
         projMatrix.setOrtho(0, windowWidth, 0, windowHeight, 0, Integer.MAX_VALUE);
     }
     

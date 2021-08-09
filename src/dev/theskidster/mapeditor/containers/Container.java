@@ -37,18 +37,32 @@ public abstract class Container extends Control {
         icon.position.set(titleBar.xPos + 7, titleBar.yPos + 7);
     }
     
-    protected void renderTitleBar(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(titleBar, Color.UI_SLATE_GRAY, uiProgram);
-        icon.render(uiProgram);
-        font.drawString(title, titleBar.xPos + 34, titleBar.yPos + 10, Color.UI_WHITE, uiProgram);
-    }
-    
-    protected void relocateTitleBar() {
+    @Override
+    public void relocate(float windowWidth, float windowHeight) {
+        if(bounds.xPos + bounds.width > windowWidth) {
+            if(bounds.xPos > 0) {
+                float xOutOfBounds = windowWidth - (bounds.xPos + bounds.width);
+                bounds.xPos = bounds.xPos + xOutOfBounds;
+            } else {
+                bounds.xPos = 0;
+            }
+        }
+        
+        //if(bounds.yPos - bounds.height > )
+        
         titleBar.xPos  = bounds.xPos;
         titleBar.yPos  = bounds.yPos + bounds.height;
         titleBar.width = bounds.width;
         
         icon.position.set(bounds.xPos + 7, bounds.yPos + bounds.height + 7);
+        
+        controls.forEach(control -> control.relocate(bounds.xPos, bounds.yPos));
+    }
+    
+    protected void renderTitleBar(GLProgram uiProgram, Background background, Font font) {
+        background.drawRectangle(titleBar, Color.UI_SLATE_GRAY, uiProgram);
+        icon.render(uiProgram);
+        font.drawString(title, titleBar.xPos + 34, titleBar.yPos + 10, Color.UI_WHITE, uiProgram);
     }
     
     protected boolean controlHovered(Vector2f cursorPos) {
@@ -56,7 +70,10 @@ public abstract class Container extends Control {
     }
     
     public void moveTo(int xPos, int yPos) {
+        bounds.xPos = xPos;
+        bounds.yPos = yPos;
         
+        controls.forEach(control -> control.relocate(bounds.xPos, bounds.yPos));
     }
 
 }
