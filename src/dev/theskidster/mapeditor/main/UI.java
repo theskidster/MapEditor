@@ -45,8 +45,6 @@ public final class UI {
         containers = new LinkedHashSet<>() {{
             add(new TestContainer(window.getWidth(), window.getHeight()));
         }};
-        
-        configure(window.getWidth(), window.getHeight());
     }
     
     void configure(int windowWidth, int windowHeight) {

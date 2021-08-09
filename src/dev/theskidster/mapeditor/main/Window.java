@@ -123,6 +123,8 @@ final class Window implements PropertyChangeListener {
         glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         glfwShowWindow(handle);
         
+        ui.configure(width, height);
+        
         glfwSetWindowPosCallback(handle, (window, xpos, ypos) -> {
             xPos = xpos;
             yPos = ypos;
@@ -165,7 +167,7 @@ final class Window implements PropertyChangeListener {
         glfwSetScrollCallback(handle, (window, xOffset, yOffset) -> {
             ui.setMouseScroll((int) yOffset);
             
-            camera.dolly((float) yOffset);
+            if(!ui.containerHovered()) camera.dolly((float) yOffset);
         });
         
         glfwSetKeyCallback(handle, (window, key, scancode, action, mods) -> {

@@ -30,7 +30,7 @@ public abstract class Container extends Control {
         super(xPos, yPos, width, height);
         this.title = title;
         
-        titleBar = new Rectangle(xPos, yPos + height, width, 34);
+        titleBar = new Rectangle(xPos, yPos + height - 34, width, 34);
         
         icon = new Icon(20, 20);
         icon.setSubImage(cellX, cellY);
