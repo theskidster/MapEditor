@@ -23,7 +23,7 @@ public final class TestContainer extends Container {
     TextArea textArea;
     
     public TestContainer(int xPos, int yPos) {
-        super((xPos / 2) - 250, (yPos / 2) - 200, 500, 400, "Title", 1, 5);
+        super((xPos / 2) - 250, (yPos / 2) - 200, 320, 400, "Title", 1, 5);
         
         textArea = new TextArea(30, 30, 120, null, true);
         

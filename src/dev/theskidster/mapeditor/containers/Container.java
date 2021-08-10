@@ -149,26 +149,28 @@ public abstract class Container extends Control {
             }
         }
         
-        if(buttons[0].contains(mouse.cursorPos) && (prevClicked && !mouse.clicked)) {
-            remove();
-        } else {
-            if(buttons[0].contains(mouse.cursorPos) && mouse.clicked) {
-                closeColor = Color.UI_RED;
+        if(!allowMove) {
+            if(buttons[0].contains(mouse.cursorPos) && (prevClicked && !mouse.clicked)) {
+                remove();
             } else {
-                closeColor = (buttons[0].contains(mouse.cursorPos)) ? Color.UI_MAROON : Color.UI_SLATE_GRAY;
+                if(buttons[0].contains(mouse.cursorPos) && mouse.clicked) {
+                    closeColor = Color.UI_RED;
+                } else {
+                    closeColor = (buttons[0].contains(mouse.cursorPos)) ? Color.UI_MAROON : Color.UI_SLATE_GRAY;
+                }
             }
-        }
-        
-        if(buttons[1].contains(mouse.cursorPos) && (prevClicked && !mouse.clicked)) {
-            collapsed = !collapsed;
-            
-            if(collapsed) icons[2].setSubImage(4, 6);
-            else          icons[2].setSubImage(4, 5);
-        } else {
-            if(buttons[1].contains(mouse.cursorPos) && mouse.clicked) {
-                collapseColor = Color.UI_LIGHT_GRAY;
+
+            if(buttons[1].contains(mouse.cursorPos) && (prevClicked && !mouse.clicked)) {
+                collapsed = !collapsed;
+
+                if(collapsed) icons[2].setSubImage(4, 6);
+                else          icons[2].setSubImage(4, 5);
             } else {
-                collapseColor = (buttons[1].contains(mouse.cursorPos)) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY;
+                if(buttons[1].contains(mouse.cursorPos) && mouse.clicked) {
+                    collapseColor = Color.UI_LIGHT_GRAY;
+                } else {
+                    collapseColor = (buttons[1].contains(mouse.cursorPos)) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY;
+                }
             }
         }
         

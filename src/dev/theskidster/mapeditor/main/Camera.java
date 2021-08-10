@@ -81,8 +81,8 @@ final class Camera {
      */
     public void setPosition(double cursorX, double cursorY) {
         if(cursorX != prevX || cursorY != prevY) {
-            float speedX = getChangeIntensity(-cursorX, -prevX, 0.017f);
-            float speedY = getChangeIntensity(-cursorY, -prevY, 0.017f);
+            float speedX = getChangeIntensity(-cursorX, -prevX, 0.027f);
+            float speedY = getChangeIntensity(-cursorY, -prevY, 0.027f);
             
             position.add(direction.cross(up, tempVec1).normalize().mul(speedX));
             
@@ -106,8 +106,8 @@ final class Camera {
      */
     public void setDirection(double cursorX, double cursorY) {
         if(cursorX != prevX || cursorY != prevY) {
-            yaw   += getChangeIntensity(cursorX, prevX, 0.35f);
-            pitch += getChangeIntensity(cursorY, prevY, 0.35f);
+            yaw   += getChangeIntensity(cursorX, prevX, 0.25f);
+            pitch += getChangeIntensity(cursorY, prevY, 0.25f);
             
             if(pitch > 89f)  pitch = 89f;
             if(pitch < -89f) pitch = -89f;
