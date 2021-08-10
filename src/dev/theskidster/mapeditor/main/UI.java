@@ -28,6 +28,7 @@ public final class UI {
     
     private Font font;
     private final Mouse mouse;
+    private final MenuBar menuBar;
     private static TextInput textInput;
     
     private final Matrix4f projMatrix   = new Matrix4f();
@@ -38,7 +39,8 @@ public final class UI {
     private final ArrayList<Rectangle> tabLayout = new ArrayList<>();
     
     UI(Window window, String fontFilename, int fontSize) {
-        mouse = new Mouse(window);
+        mouse   = new Mouse(window);
+        menuBar = new MenuBar();
         
         setFont(fontFilename, fontSize);
         
@@ -49,6 +51,7 @@ public final class UI {
     
     void configure(int windowWidth, int windowHeight) {
         containers.forEach(container -> container.relocate(windowWidth, windowHeight));
+        menuBar.relocate(windowWidth, windowHeight);
         projMatrix.setOrtho(0, windowWidth, 0, windowHeight, 0, Integer.MAX_VALUE);
     }
     
@@ -58,17 +61,19 @@ public final class UI {
             if(command != null) cmdHistory.executeCommand(command);
         });
         
+        Command command = menuBar.update(mouse);
+        if(command != null) cmdHistory.executeCommand(command);
+        
         containers.removeIf(container -> container.removalRequested());
         
         if(!containerHovered()) mouse.setCursorShape(GLFW_ARROW_CURSOR);
-        
         mouse.scrolled = false;
     }
     
     void render(GLProgram uiProgram) {
         uiProgram.setUniform("uProjection", false, projMatrix);
-        
         containers.forEach(container -> container.render(uiProgram, background, font));
+        menuBar.render(uiProgram, background, font);
     }
     
     String getFontFilename() {
