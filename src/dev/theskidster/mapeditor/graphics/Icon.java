@@ -64,6 +64,11 @@ public final class Icon {
         glEnableVertexAttribArray(1);
     }
     
+    public Icon(int cellWidth, int cellHeight, int cellX, int cellY) {
+        this(cellWidth, cellHeight);
+        setSubImage(cellX, cellY);
+    }
+    
     public void setSubImage(int cellX, int cellY) {
         tempCell.set(cellX, cellY);
         

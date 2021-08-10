@@ -4,6 +4,7 @@ import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.controls.Control;
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.graphics.Color;
+import dev.theskidster.mapeditor.graphics.Icon;
 import dev.theskidster.mapeditor.utils.Rectangle;
 import dev.theskidster.shadercore.GLProgram;
 import java.util.ArrayList;
@@ -56,14 +57,14 @@ class MenuBar extends Control {
                 new Rectangle(1, 1,                       318, bounds.height)
             };
             
-            Vector2i padding = new Vector2i(42, 1);
+            Vector2i padding = new Vector2i(34, 1);
             
             ArrayList<MenuOption> options = new ArrayList<>() {{
-                add(new MenuOption("New Map...",  rectangles[0], padding));
-                add(new MenuOption("Open Map...", rectangles[1], padding));
-                add(new MenuOption("Save",        rectangles[2], padding));
+                add(new MenuOption("New Map...",  rectangles[0], padding, new Icon(20, 20, 1, 0)));
+                add(new MenuOption("Open Map...", rectangles[1], padding, new Icon(20, 20, 2, 0)));
+                add(new MenuOption("Save",        rectangles[2], padding, new Icon(20, 20, 3, 0)));
                 add(new MenuOption("Save As...",  rectangles[3], padding));
-                add(new MenuOption("Exit",        rectangles[4], padding));
+                add(new MenuOption("Exit",        rectangles[4], padding, new Icon(20, 20, 2, 4)));
             }};
             
             menus.put(0, new DropDown(options, new Rectangle(0, 100, 320, (bounds.height * 5) + 4)));
@@ -157,13 +158,6 @@ class MenuBar extends Control {
         
         if(openSubMenus) {
             menus.get(currMenuIndex).render(uiProgram, background, font);
-            
-            /*
-            switch(currMenuIndex) {
-                case 0 -> {
-                    for(int i = 0; i < 5; i++) icons[i].render(program);
-                }
-            }*/
         }
     }
 
@@ -181,6 +175,10 @@ class MenuBar extends Control {
             
             menu.options.forEach(option -> {
                 option.bounds.yPos = menu.bounds.yPos + option.yOffset;
+                
+                if(option.icon != null) {
+                    option.icon.position.set(option.bounds.xPos + 7, option.bounds.yPos + 4);
+                }
             });
         });
     }
