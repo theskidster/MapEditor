@@ -180,7 +180,7 @@ class MenuBar extends Control {
             menu.bounds.yPos = bounds.yPos - menu.bounds.height;
             
             menu.options.forEach(option -> {
-                option.bounds.yPos = option.bounds.yPos + menu.bounds.yPos;
+                option.bounds.yPos = menu.bounds.yPos + option.yOffset;
             });
         });
     }

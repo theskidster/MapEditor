@@ -16,6 +16,9 @@ import org.joml.Vector2i;
  */
 class MenuOption extends MenuElement {
 
+    final float xOffset;
+    final float yOffset;
+    
     final String text;
     final Rectangle bounds;
     private final Vector2i padding;
@@ -25,6 +28,9 @@ class MenuOption extends MenuElement {
         this.bounds  = bounds;
         this.text    = text;
         this.padding = padding;
+        
+        xOffset = bounds.xPos;
+        yOffset = bounds.yPos;
         
         //TODO: provide additional constructor that displays the key shortcut?
     }
@@ -58,10 +64,11 @@ class MenuOption extends MenuElement {
     void render(GLProgram uiProgram, Background background, Font font) {
         background.drawRectangle(bounds, color, uiProgram);
         
-        xOffset = bounds.xPos + padding.x;
-        yOffset = bounds.yPos + padding.y + (font.size / 2);
-
-        font.drawString(text, xOffset, yOffset, Color.UI_WHITE, uiProgram);
+        font.drawString(text,
+                        bounds.xPos + padding.x, 
+                        bounds.yPos + padding.y + (font.size / 2), 
+                        Color.UI_WHITE, 
+                        uiProgram);
     }
 
 }

@@ -13,9 +13,6 @@ import dev.theskidster.shadercore.GLProgram;
  */
 abstract class MenuElement {
     
-    protected float xOffset;
-    protected float yOffset;
-    
     protected boolean prevPressed;
     protected boolean currPressed;
     protected boolean hovered;
