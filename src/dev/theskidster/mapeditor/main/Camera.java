@@ -81,8 +81,8 @@ final class Camera {
      */
     public void setPosition(double cursorX, double cursorY) {
         if(cursorX != prevX || cursorY != prevY) {
-            float speedX = getChangeIntensity(-cursorX, -prevX, 0.027f);
-            float speedY = getChangeIntensity(-cursorY, -prevY, 0.027f);
+            float speedX = getChangeIntensity(-cursorX, -prevX, 0.015f);
+            float speedY = getChangeIntensity(-cursorY, -prevY, 0.015f);
             
             position.add(direction.cross(up, tempVec1).normalize().mul(speedX));
             
