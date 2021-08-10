@@ -23,16 +23,17 @@ public class LabelButton extends Control {
     private boolean prevPressed;
     
     String text;
-    private Command command;
     private Color color;
+    private final Command command;
     private final Rectangle middle;
     private final Icon iconLeft;
     private final Icon iconRight;
     private final Vector2f textPos;
     
-    public LabelButton(float xOffset, float yOffset, float width, String text) {
+    public LabelButton(float xOffset, float yOffset, float width, String text, Command command) {
         super(xOffset, yOffset, width, 30);
-        this.text = text;
+        this.text    = text;
+        this.command = command;
         
         middle = new Rectangle(xOffset + 15, yOffset, width - 30, bounds.height);
         
@@ -43,11 +44,6 @@ public class LabelButton extends Control {
         iconRight.position.set(xOffset + width - 15, yOffset);
         
         textPos = new Vector2f(xOffset + 15, yOffset + 8);
-    }
-    
-    public LabelButton(float xPos, float yPos, float width, String text, Command command) {
-        this(xPos, yPos, width, text);
-        this.command = command;
     }
 
     @Override

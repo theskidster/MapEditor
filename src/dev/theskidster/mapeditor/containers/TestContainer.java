@@ -25,7 +25,7 @@ public final class TestContainer extends Container {
     public TestContainer(int xPos, int yPos) {
         super((xPos / 3f) - 250, (yPos / 2) - 100, 360, 400, "Title", 1, 5);
         
-        button = new LabelButton(30, 30, 63, "Add");
+        button = new LabelButton(30, 30, 63, "Add", null);
         
         controls = new ArrayList<>() {{
             add(button);
