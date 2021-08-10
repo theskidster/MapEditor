@@ -42,6 +42,7 @@ public class Color {
     public static final Color UI_GREEN       = new Color(4, 186, 0);
     public static final Color UI_BLUE        = new Color(51, 102, 204);
     public static final Color UI_MAROON      = new Color(182, 39, 39);
+    public static final Color UI_CYAN        = new Color(66, 136, 223);
     
     public final float r;
     public final float g;

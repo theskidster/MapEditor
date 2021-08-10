@@ -18,6 +18,9 @@ import org.joml.Vector2f;
  */
 public abstract class Control {
 
+    protected final float xOffset;
+    protected final float yOffset;
+    
     private final boolean[] prevClicked = new boolean[2];
     private final boolean[] currClicked = new boolean[2];
     protected boolean remove;
@@ -25,7 +28,9 @@ public abstract class Control {
     protected final Rectangle bounds;
     
     protected Control(float xPos, float yPos, float width, float height) {
-        bounds = new Rectangle(xPos, yPos, width, height); 
+        bounds = new Rectangle(xPos, yPos, width, height);
+        this.xOffset = xPos;
+        this.yOffset = yPos;
     }
     
     protected boolean clickedOnce(Rectangle rectangle, Mouse mouse) {

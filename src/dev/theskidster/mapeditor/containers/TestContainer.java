@@ -1,6 +1,7 @@
 package dev.theskidster.mapeditor.containers;
 
 import dev.theskidster.mapeditor.commands.Command;
+import dev.theskidster.mapeditor.controls.LabelButton;
 import dev.theskidster.mapeditor.controls.TextArea;
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.main.Font;
@@ -19,22 +20,21 @@ import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
  */
 public final class TestContainer extends Container {
     
-    TextArea textArea;
+    LabelButton button;
     
     public TestContainer(int xPos, int yPos) {
-        super((xPos / 1.25f) - 250, (yPos / 2) - 100, 320, 400, "Title", 1, 5);
+        super((xPos / 3f) - 250, (yPos / 2) - 100, 360, 400, "Title", 1, 5);
         
-        textArea = new TextArea(30, 30, 120, null, true);
+        button = new LabelButton(30, 30, 63, "Add");
         
         controls = new ArrayList<>() {{
-            add(textArea);
+            add(button);
         }};
     }
 
     @Override
     public Command updateAdjunct(Mouse mouse) {
-        
-        textArea.update(mouse);
+        button.update(mouse);
         
         if(!controlHovered(mouse.cursorPos)) {
             mouse.setCursorShape(GLFW_ARROW_CURSOR);
@@ -45,7 +45,7 @@ public final class TestContainer extends Container {
 
     @Override
     public void renderAdjunct(GLProgram uiProgram, Background background, Font font) {
-        textArea.render(uiProgram, background, font);
+        button.render(uiProgram, background, font);
     }
 
 }

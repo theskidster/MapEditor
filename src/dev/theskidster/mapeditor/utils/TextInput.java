@@ -32,8 +32,6 @@ public abstract class TextInput extends Control {
     protected int lastIndex;
     protected int clickCount;
     
-    protected final float xOffset;
-    protected final float yOffset;
     protected float parentPosX;
     protected float parentPosY;
     
@@ -110,9 +108,6 @@ public abstract class TextInput extends Control {
     
     public TextInput(float xOffset, float yOffset, float width) {
         super(xOffset, yOffset, width, 28);
-        
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
         
         carat.setSubImage(5, 5);
     }
