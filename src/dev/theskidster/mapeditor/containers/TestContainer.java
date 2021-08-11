@@ -2,7 +2,6 @@ package dev.theskidster.mapeditor.containers;
 
 import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.controls.LabelButton;
-import dev.theskidster.mapeditor.controls.TextArea;
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
