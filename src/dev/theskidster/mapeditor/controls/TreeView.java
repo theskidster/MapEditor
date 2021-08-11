@@ -14,9 +14,9 @@ import dev.theskidster.shadercore.GLProgram;
  * @author J Hoffman
  * @since  
  */
-public class List extends Control {
+public class TreeView extends Control {
 
-    public List(float xPos, float yPos, float width, float height) {
+    public TreeView(float xPos, float yPos, float width, float height) {
         super(xPos, yPos, width, height);
     }
 
