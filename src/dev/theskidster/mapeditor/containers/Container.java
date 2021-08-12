@@ -98,6 +98,8 @@ public abstract class Container extends Control {
     
     protected abstract void renderAdjunct(GLProgram uiProgram, Background background, Font font);
     
+    protected abstract void relocateAdjunct(float windowWidth, float windowHeight);
+    
     protected boolean controlHovered(Vector2f cursorPos) {
         return controls.stream().anyMatch(control -> control.hovered(cursorPos));
     }
@@ -203,6 +205,7 @@ public abstract class Container extends Control {
     @Override
     public void relocate(float windowWidth, float windowHeight) {
         configure();
+        relocateAdjunct(windowWidth, windowHeight);
     }
 
 }
