@@ -1,7 +1,8 @@
 package dev.theskidster.mapeditor.containers;
 
 import dev.theskidster.mapeditor.commands.Command;
-import dev.theskidster.mapeditor.controls.TextArea;
+import dev.theskidster.mapeditor.controls.ScrollBar;
+import dev.theskidster.mapeditor.controls.TreeView;
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
@@ -19,21 +20,24 @@ import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
  */
 public final class TestContainer extends Container {
     
-    TextArea textArea;
+    TreeView treeView;
+    ScrollBar scrollBar;
     
     public TestContainer(int xPos, int yPos) {
         super((xPos / 3f) - 250, (yPos / 2) - 100, 360, 400, "Title", 1, 5);
         
-        textArea = new TextArea(30f, 30f, 100f, null, true);
+        treeView  = new TreeView(15, 15, 200, 170);
+        scrollBar = new ScrollBar(230, 15, 170, treeView);
         
         controls = new ArrayList<>() {{
-            add(textArea);
+            add(treeView);
+            add(scrollBar);
         }};
     }
 
     @Override
     public Command updateAdjunct(Mouse mouse) {
-        textArea.update(mouse);
+        controls.forEach(control -> control.update(mouse));
         
         if(!controlHovered(mouse.cursorPos)) {
             mouse.setCursorShape(GLFW_ARROW_CURSOR);
@@ -44,7 +48,12 @@ public final class TestContainer extends Container {
 
     @Override
     public void renderAdjunct(GLProgram uiProgram, Background background, Font font) {
-        textArea.render(uiProgram, background, font);
+        controls.forEach(control -> control.render(uiProgram, background, font));
+    }
+
+    @Override
+    protected void relocateAdjunct(float windowWidth, float windowHeight) {
+        controls.forEach(control -> control.relocate(bounds.xPos, bounds.yPos));
     }
 
 }

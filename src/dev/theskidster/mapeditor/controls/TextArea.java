@@ -181,7 +181,7 @@ public class TextArea extends TextInput {
                         firstIndex = leftIndex;
                     }
                     
-                    firstIndexSet   = true;
+                    firstIndexSet = true;
                 }
                 
                 scroll();
