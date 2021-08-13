@@ -23,6 +23,9 @@ public class TreeGroup extends Control {
 
     private final int index;
     
+    private float verticalOffset;
+    private float parentPosY;
+    
     private final String name;
     private final Icon arrowIcon; 
     private final Rectangle arrowBounds; 
@@ -44,9 +47,13 @@ public class TreeGroup extends Control {
         bounds.width  = treeView.bounds.width;
     }
     
+    void setVerticalOffset(float verticalOffset) {
+        this.verticalOffset = verticalOffset;
+    }
+    
     @Override
     public Command update(Mouse mouse) {
-        
+        bounds.yPos = parentPosY + verticalOffset;
         
         return null;
     }
@@ -54,13 +61,15 @@ public class TreeGroup extends Control {
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
         font.drawString(name, bounds.xPos, bounds.yPos, fontColor, uiProgram);
-        
+        background.drawRectangle(arrowBounds, Color.RED, uiProgram);
     }
 
     @Override
     public void relocate(float parentPosX, float parentPosY) {
         bounds.xPos = parentPosX;
         bounds.yPos = parentPosY;
+        
+        this.parentPosY = parentPosY;
     }
-
+    
 }

@@ -36,6 +36,9 @@ public class TreeView extends Control {
     @Override
     public Command update(Mouse mouse) {
         
+        //TODO: associateScrollbar?
+        //int verticalOffset = scrollBar.
+        
         for(TreeGroup group : groups) {
             group.update(mouse);
         }
