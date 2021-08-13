@@ -5,6 +5,7 @@ import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.graphics.Color;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
+import dev.theskidster.mapeditor.utils.Observable;
 import dev.theskidster.shadercore.GLProgram;
 
 /**
@@ -17,6 +18,8 @@ import dev.theskidster.shadercore.GLProgram;
  */
 public class TreeView extends Control {
 
+    Observable observable = new Observable(this);
+    
     public TreeView(float xPos, float yPos, float width, float height) {
         super(xPos, yPos, width, height);
     }

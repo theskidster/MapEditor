@@ -27,7 +27,7 @@ public final class TestContainer extends Container {
         super((xPos / 3f) - 250, (yPos / 2) - 100, 360, 400, "Title", 1, 5);
         
         treeView  = new TreeView(15, 15, 200, 170);
-        scrollBar = new ScrollBar(230, 15, 170, treeView);
+        scrollBar = new ScrollBar(230, 15, 170, 200);
         
         controls = new ArrayList<>() {{
             add(treeView);
@@ -37,7 +37,12 @@ public final class TestContainer extends Container {
 
     @Override
     public Command updateAdjunct(Mouse mouse) {
+        scrollBar.parentHovered = hovered(mouse.cursorPos);
+        
         controls.forEach(control -> control.update(mouse));
+        scrollBar.setContentLength(400);
+        
+        System.out.println(scrollBar.getContentScrollOffset());
         
         if(!controlHovered(mouse.cursorPos)) {
             mouse.setCursorShape(GLFW_ARROW_CURSOR);
