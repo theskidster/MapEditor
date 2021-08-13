@@ -20,24 +20,43 @@ public class TreeView extends Control {
 
     Observable observable = new Observable(this);
     
-    public TreeView(float xPos, float yPos, float width, float height) {
+    private final TreeGroup[] groups;
+    
+    public TreeView(float xPos, float yPos, float width, float height, TreeGroup[] groups) {
         super(xPos, yPos, width, height);
+        this.groups = groups;
+        
+        associateTreeGroups();
+    }
+    
+    final void associateTreeGroups() {
+        for(TreeGroup group : groups) group.setTreeView(this);
     }
 
     @Override
     public Command update(Mouse mouse) {
+        
+        for(TreeGroup group : groups) {
+            group.update(mouse);
+        }
+        
         return null;
     }
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
         background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
+        
+        for(TreeGroup group : groups) group.render(uiProgram, background, font);
+        
     }
 
     @Override
     public void relocate(float parentPosX, float parentPosY) {
         bounds.xPos = parentPosX + xOffset;
         bounds.yPos = parentPosY + yOffset;
+        
+        for(TreeGroup group : groups) group.relocate(bounds.xPos, bounds.yPos);
     }
 
 }

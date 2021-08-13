@@ -23,6 +23,7 @@ public class ScrollBar extends Control {
     private final int length;
     
     private final float viewportLength;
+    private float sliderOffsetY;
     private float currTotalContentLength;
     private float prevTotalContentLength;
     private float contentOffset;
@@ -54,7 +55,7 @@ public class ScrollBar extends Control {
         botIcon = new Icon(20, 20, 1, 3);
     }
 
-    private void scroll(float change, float contentScale) {
+    private void scroll(float change) {
         boolean minLimitReached = (slider.yPos + slider.height) + change > bounds.yPos + bounds.height;
         boolean maxLimitReached = slider.yPos + change < bounds.yPos;
         
@@ -77,14 +78,14 @@ public class ScrollBar extends Control {
             
             if(slider.contains(mouse.cursorPos) && mouse.clicked && mouse.button.equals("left")) {
                 change = mouse.cursorPos.y - prevCursorChange;
-                scroll(change, contentScale);
+                scroll(change);
             } else if(parentHovered && mouse.scrolled) {
                 change = mouse.scrollValue * 5;
-                scroll(change, contentScale);
+                scroll(change);
             } else if(topBtn.contains(mouse.cursorPos) && mouse.clicked && mouse.button.equals("left")) {
-                scroll(2, contentScale);
+                scroll(2);
             } else if(botBtn.contains(mouse.cursorPos) && mouse.clicked && mouse.button.equals("left")) {
-                scroll(-2, contentScale);
+                scroll(-2);
             }
             
             prevCursorChange = mouse.cursorPos.y;
@@ -92,6 +93,7 @@ public class ScrollBar extends Control {
         
         float scaleFactor = ((currTotalContentLength / slider.height) / contentScale);
         contentOffset     = (slider.yPos - bounds.yPos) * (1 + scaleFactor);
+        sliderOffsetY     = (slider.yPos - bounds.yPos);
         
         topBtnColor = (topBtn.contains(mouse.cursorPos)) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY;
         sliderColor = (slider.contains(mouse.cursorPos)) ? Color.UI_LIGHT_GRAY : Color.UI_MEDIUM_GRAY;
@@ -121,6 +123,7 @@ public class ScrollBar extends Control {
         topIcon.position.set(topBtn.xPos - 2, topBtn.yPos - 2);
         
         slider.xPos = bounds.xPos;
+        slider.yPos = bounds.yPos + sliderOffsetY;
         
         botBtn.xPos = bounds.xPos;
         botBtn.yPos = bounds.yPos - 15;
