@@ -59,10 +59,7 @@ public class ScrollBar extends Control {
         boolean maxLimitReached = slider.yPos + change < bounds.yPos;
         
         if(!minLimitReached && !maxLimitReached) {
-            float scaleFactor = ((currTotalContentLength / slider.height) / contentScale);
-            
             slider.yPos += change;
-            contentOffset = (slider.yPos - bounds.yPos) * (1 + scaleFactor);
         }
     }
     
@@ -73,7 +70,6 @@ public class ScrollBar extends Control {
         if(contentScale <= 1) {
             slider.yPos   = bounds.yPos + ((bounds.height - slider.height) / 2);
             slider.height = bounds.height;
-            contentOffset = 0;
         } else {
             slider.height = length / contentScale;
             
@@ -92,15 +88,10 @@ public class ScrollBar extends Control {
             }
             
             prevCursorChange = mouse.cursorPos.y;
-            
-            /*
-            if(prevTotalContentLength != currTotalContentLength) {
-                if((slider.yPos + slider.height) > bounds.yPos + length) {
-                    slider.yPos = bounds.yPos;
-                    contentOffset = 0;
-                }
-            }*/
         }
+        
+        float scaleFactor = ((currTotalContentLength / slider.height) / contentScale);
+        contentOffset     = (slider.yPos - bounds.yPos) * (1 + scaleFactor);
         
         topBtnColor = (topBtn.contains(mouse.cursorPos)) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY;
         sliderColor = (slider.contains(mouse.cursorPos)) ? Color.UI_LIGHT_GRAY : Color.UI_MEDIUM_GRAY;
@@ -150,7 +141,7 @@ public class ScrollBar extends Control {
     }
     
     public int getContentScrollOffset() {
-        return (int) contentOffset;
+        return (int) -(contentOffset);
     }
     
 }
