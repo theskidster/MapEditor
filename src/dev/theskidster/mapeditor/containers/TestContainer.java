@@ -53,9 +53,9 @@ public final class TestContainer extends Container {
         }};
         
         TreeGroup[] groups = new TreeGroup[3];
-        groups[0] = new TreeGroup("Group 1", 0, objects1);
-        groups[1] = new TreeGroup("Group 2", 1, objects2);
-        groups[2] = new TreeGroup("Group 3", 2, objects3);
+        groups[0] = new TreeGroup("Group 1", 0, objects2);
+        groups[1] = new TreeGroup("Group 2", 1, objects1);
+        groups[2] = new TreeGroup("Group 3", 2, objects1);
         
         scrollBar = new ScrollBar(230, 15, 200, 200);
         treeView  = new TreeView(15, 15, 200, 200, scrollBar, groups);

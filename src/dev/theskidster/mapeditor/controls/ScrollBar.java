@@ -111,12 +111,8 @@ public class ScrollBar extends Control {
         Another hack that will offset the position of the slider whenever the 
         size of the content has changed.
         */
-        if(prevContentLength != currContentLength) {
-            if(prevContentLength < currContentLength) {
-                slider.yPos += (sliderPrevHeight - slider.height);
-            } else {
-                slider.yPos += (bounds.yPos - slider.yPos);
-            }
+        if(prevContentLength != currContentLength && prevContentLength < currContentLength) {
+            slider.yPos += (sliderPrevHeight - slider.height);
         }
         
         float scaleFactor = ((currContentLength / slider.height) / contentScale);

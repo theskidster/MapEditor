@@ -57,10 +57,7 @@ public class TreeView extends Control {
             group.update(mouse);
             
             /*
-            TODO:
-              - offset the position of the slider whenever its resized so things
-                arent so jittery
-            
+            TODO:            
               - Add selectable members/groups
             
               - disable selection and interaction with members that
