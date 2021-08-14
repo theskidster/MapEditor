@@ -7,6 +7,8 @@ import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
 import dev.theskidster.mapeditor.utils.Observable;
 import dev.theskidster.shadercore.GLProgram;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created: Aug 10, 2021
@@ -20,11 +22,15 @@ public class TreeView extends Control {
 
     Observable observable = new Observable(this);
     
+    private final ScrollBar scrollBar;
     private final TreeGroup[] groups;
     
-    public TreeView(float xPos, float yPos, float width, float height, TreeGroup[] groups) {
+    private final Map<Integer, Float> groupLengths = new HashMap<>();
+    
+    public TreeView(float xPos, float yPos, float width, float height, ScrollBar scrollBar, TreeGroup[] groups) {
         super(xPos, yPos, width, height);
-        this.groups = groups;
+        this.scrollBar = scrollBar;
+        this.groups    = groups;
         
         associateTreeGroups();
     }
@@ -36,12 +42,21 @@ public class TreeView extends Control {
     @Override
     public Command update(Mouse mouse) {
         
-        //TODO: associateScrollbar?
-        //int verticalOffset = scrollBar.
+        int verticalOffset = scrollBar.getContentScrollOffset();
         
-        for(TreeGroup group : groups) {
+        for(int i = groups.length - 1; i > -1; i--) {
+            TreeGroup group = groups[i];
+            
+            group.setVerticalOffset(verticalOffset);
             group.update(mouse);
+            
+            verticalOffset += 28 * group.getLength();
+            groupLengths.put(i, 28f * group.getLength());
         }
+        
+        scrollBar.setContentLength(groupLengths);
+        //scrollBar.parentHovered = hovered(mouse.cursorPos);
+        scrollBar.update(mouse);
         
         return null;
     }
@@ -52,6 +67,8 @@ public class TreeView extends Control {
         
         for(TreeGroup group : groups) group.render(uiProgram, background, font);
         
+        scrollBar.render(uiProgram, background, font);
+        
     }
 
     @Override
@@ -60,6 +77,8 @@ public class TreeView extends Control {
         bounds.yPos = parentPosY + yOffset;
         
         for(TreeGroup group : groups) group.relocate(bounds.xPos, bounds.yPos);
+        
+        scrollBar.relocate(parentPosX, parentPosY);
     }
 
 }

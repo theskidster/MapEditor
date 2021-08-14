@@ -22,9 +22,12 @@ import java.util.Map;
 public class TreeGroup extends Control {
 
     private final int index;
+    private int length;
     
     private float verticalOffset;
     private float parentPosY;
+    
+    private boolean collapsed = true;
     
     private final String name;
     private final Icon arrowIcon; 
@@ -32,10 +35,13 @@ public class TreeGroup extends Control {
     private TreeView treeView;
     private Color fontColor;
     
+    private Map<Integer, GameObject> gameObjects;
+    
     public TreeGroup(String name, int index, Map<Integer, GameObject> gameObjects) {
         super(0, 0, 0, 28);
-        this.name  = name;
-        this.index = index;
+        this.name        = name;
+        this.index       = index;
+        this.gameObjects = gameObjects;
         
         arrowIcon   = new Icon(20, 20, 4, 0);
         arrowBounds = new Rectangle(0, 0, 16, 16);
@@ -55,12 +61,19 @@ public class TreeGroup extends Control {
     public Command update(Mouse mouse) {
         bounds.yPos = parentPosY + verticalOffset;
         
+        if(!collapsed) {
+            length = gameObjects.size();
+        } else {
+            length = 1;
+        }
+        
         return null;
     }
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        font.drawString(name, bounds.xPos, bounds.yPos, fontColor, uiProgram);
+        //background.drawRectangle(bounds, Color.random(), uiProgram);
+        font.drawString(name, bounds.xPos, bounds.yPos + 8, fontColor, uiProgram);
         background.drawRectangle(arrowBounds, Color.RED, uiProgram);
     }
 
@@ -70,6 +83,10 @@ public class TreeGroup extends Control {
         bounds.yPos = parentPosY;
         
         this.parentPosY = parentPosY;
+    }
+    
+    public int getLength() {
+        return length;
     }
     
 }

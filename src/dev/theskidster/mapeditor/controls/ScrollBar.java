@@ -20,12 +20,9 @@ import java.util.Map;
  */
 public class ScrollBar extends Control {
     
-    private final int length;
-    
     private final float viewportLength;
     private float sliderOffsetY;
-    private float currTotalContentLength;
-    private float prevTotalContentLength;
+    private float contentLength;
     private float contentOffset;
     private float prevCursorChange;
     
@@ -44,7 +41,6 @@ public class ScrollBar extends Control {
     
     public ScrollBar(float xOffset, float yOffset, int length, float viewportLength) {
         super(xOffset, yOffset + 15, 15, length - 30);
-        this.length         = length;
         this.viewportLength = viewportLength;
         
         topBtn = new Rectangle(xOffset, yOffset, 15, 15);
@@ -66,15 +62,15 @@ public class ScrollBar extends Control {
     
     @Override
     public Command update(Mouse mouse) {
-        float contentScale = currTotalContentLength / viewportLength;
+        float contentScale = contentLength / viewportLength;
         
         if(contentScale <= 1) {
-            slider.yPos   = bounds.yPos + ((bounds.height - slider.height) / 2);
             slider.height = bounds.height;
+            slider.yPos   = bounds.yPos;
         } else {
-            slider.height = length / contentScale;
-            
             float change = 0;
+            slider.height = bounds.height / contentScale;
+            //slider.yPos   = (int) (bounds.yPos + (bounds.height - slider.height));
             
             if(slider.contains(mouse.cursorPos) && mouse.clicked && mouse.button.equals("left")) {
                 change = mouse.cursorPos.y - prevCursorChange;
@@ -91,9 +87,11 @@ public class ScrollBar extends Control {
             prevCursorChange = mouse.cursorPos.y;
         }
         
-        float scaleFactor = ((currTotalContentLength / slider.height) / contentScale);
-        contentOffset     = (slider.yPos - bounds.yPos) * (1 + scaleFactor);
-        sliderOffsetY     = (slider.yPos - bounds.yPos);
+        
+        float scaleFactor = ((contentLength / slider.height) / contentScale);
+        
+        contentOffset = (slider.yPos - bounds.yPos) * scaleFactor;
+        sliderOffsetY = (slider.yPos - bounds.yPos);
         
         topBtnColor = (topBtn.contains(mouse.cursorPos)) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY;
         sliderColor = (slider.contains(mouse.cursorPos)) ? Color.UI_LIGHT_GRAY : Color.UI_MEDIUM_GRAY;
@@ -130,17 +128,16 @@ public class ScrollBar extends Control {
         botIcon.position.set(botBtn.xPos - 2, botBtn.yPos - 3);
     }
     
-    public void setContentLength(Map<Integer, Float> widgetLengths) {
-        prevTotalContentLength = currTotalContentLength;
-        currTotalContentLength = 0;
-                
-        widgetLengths.forEach((index, elementLength) -> {
-            currTotalContentLength += elementLength;
+    public void setContentLength(Map<Integer, Float> groupLengths) {
+        contentLength = 0;
+        
+        groupLengths.forEach((index, memberLength) -> {
+            contentLength += memberLength;
         });
     }
     
     public void setContentLength(float length) {
-        currTotalContentLength = length;
+        contentLength = length;
     }
     
     public int getContentScrollOffset() {

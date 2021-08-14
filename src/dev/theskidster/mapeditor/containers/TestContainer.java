@@ -40,21 +40,18 @@ public final class TestContainer extends Container {
         groups[1] = new TreeGroup("Group 2", 1, objects);
         groups[2] = new TreeGroup("Group 3", 2, objects);
         
-        treeView  = new TreeView(15, 15, 200, 170, groups);
-        scrollBar = new ScrollBar(230, 15, 170, 200);
+        scrollBar = new ScrollBar(230, 15, 170, 42);
+        treeView  = new TreeView(15, 15, 200, 42, scrollBar, groups);
         
         controls = new ArrayList<>() {{
             add(treeView);
-            add(scrollBar);
+            //add(scrollBar);
         }};
     }
 
     @Override
     public Command updateAdjunct(Mouse mouse) {
-        scrollBar.parentHovered = hovered(mouse.cursorPos);
-        
         controls.forEach(control -> control.update(mouse));
-        scrollBar.setContentLength(400);
         
         if(!controlHovered(mouse.cursorPos)) {
             mouse.setCursorShape(GLFW_ARROW_CURSOR);
