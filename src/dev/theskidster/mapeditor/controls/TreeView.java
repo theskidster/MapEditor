@@ -55,7 +55,7 @@ public class TreeView extends Control {
         }
         
         scrollBar.setContentLength(groupLengths);
-        //scrollBar.parentHovered = hovered(mouse.cursorPos);
+        scrollBar.parentHovered = hovered(mouse.cursorPos);
         scrollBar.update(mouse);
         
         return null;

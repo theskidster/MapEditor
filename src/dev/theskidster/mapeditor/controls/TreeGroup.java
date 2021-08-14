@@ -29,11 +29,12 @@ public class TreeGroup extends Control {
     
     private boolean collapsed = true;
     
-    private final String name;
+    final String name;
     private final Icon arrowIcon; 
     private final Rectangle arrowBounds; 
     private TreeView treeView;
     private Color fontColor;
+    private Color bgColor = Color.random();
     
     private Map<Integer, GameObject> gameObjects;
     
@@ -61,6 +62,18 @@ public class TreeGroup extends Control {
     public Command update(Mouse mouse) {
         bounds.yPos = parentPosY + verticalOffset;
         
+        arrowBounds.xPos = bounds.xPos + 6;
+        arrowBounds.yPos = bounds.yPos + 6;
+        
+        arrowIcon.position.set(arrowBounds.xPos - 2, arrowBounds.yPos - 2);
+        
+        if(clickedOnce(arrowBounds, mouse) && mouse.button.equals("left")) {
+            toggleCollapsed();
+        }
+        
+        if(collapsed) arrowIcon.setSubImage(4, 0);
+        else          arrowIcon.setSubImage(5, 0);
+        
         if(!collapsed) {
             length = gameObjects.size();
         } else {
@@ -72,9 +85,10 @@ public class TreeGroup extends Control {
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        //background.drawRectangle(bounds, Color.random(), uiProgram);
-        font.drawString(name, bounds.xPos, bounds.yPos + 8, fontColor, uiProgram);
-        background.drawRectangle(arrowBounds, Color.RED, uiProgram);
+        //background.drawRectangle(bounds, bgColor, uiProgram);
+        font.drawString(name, bounds.xPos + 28, bounds.yPos + 8, fontColor, uiProgram);
+        //background.drawRectangle(arrowBounds, Color.UI_BLUE, uiProgram);
+        arrowIcon.render(uiProgram);
     }
 
     @Override
@@ -83,10 +97,19 @@ public class TreeGroup extends Control {
         bounds.yPos = parentPosY;
         
         this.parentPosY = parentPosY;
+        
+        arrowBounds.xPos = bounds.xPos + 6;
+        arrowBounds.yPos = bounds.xPos + 6;
+        
+        arrowIcon.position.set(arrowBounds.xPos - 2, arrowBounds.yPos - 2);
     }
     
     public int getLength() {
         return length;
+    }
+    
+    public void toggleCollapsed() {
+        collapsed = !collapsed;
     }
     
 }

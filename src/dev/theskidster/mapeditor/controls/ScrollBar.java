@@ -67,10 +67,10 @@ public class ScrollBar extends Control {
         if(contentScale <= 1) {
             slider.height = bounds.height;
             slider.yPos   = bounds.yPos;
+            //TODO: hide when its useless
         } else {
             float change = 0;
             slider.height = bounds.height / contentScale;
-            //slider.yPos   = (int) (bounds.yPos + (bounds.height - slider.height));
             
             if(slider.contains(mouse.cursorPos) && mouse.clicked && mouse.button.equals("left")) {
                 change = mouse.cursorPos.y - prevCursorChange;
@@ -86,7 +86,6 @@ public class ScrollBar extends Control {
             
             prevCursorChange = mouse.cursorPos.y;
         }
-        
         
         float scaleFactor = ((contentLength / slider.height) / contentScale);
         
