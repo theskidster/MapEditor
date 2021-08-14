@@ -40,11 +40,14 @@ public final class TestContainer extends Container {
             put(1, new GameObject("object 2"));
             put(2, new GameObject("object 3"));
             put(3, new GameObject("object 4"));
+            put(4, new GameObject("object 5"));
+            put(5, new GameObject("object 6"));
+            put(6, new GameObject("object 7"));
         }};
         
         TreeGroup[] groups = new TreeGroup[3];
-        groups[0] = new TreeGroup("Group 1", 0, objects1);
-        groups[1] = new TreeGroup("Group 2", 1, objects2);
+        groups[0] = new TreeGroup("Group 1", 0, objects2);
+        groups[1] = new TreeGroup("Group 2", 1, objects1);
         groups[2] = new TreeGroup("Group 3", 2, objects1);
         
         scrollBar = new ScrollBar(230, 15, 170, 65);

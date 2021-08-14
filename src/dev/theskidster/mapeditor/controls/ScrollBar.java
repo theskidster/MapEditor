@@ -22,11 +22,13 @@ public class ScrollBar extends Control {
     
     private final float viewportLength;
     private float sliderOffsetY;
-    private float contentLength;
+    private float currContentLength;
+    private float prevContentLength;
     private float contentOffset;
     private float prevCursorChange;
     
     public boolean parentHovered;
+    private boolean initialUpdate = true;
     
     private final Rectangle topBtn;
     private final Rectangle slider;
@@ -62,7 +64,12 @@ public class ScrollBar extends Control {
     
     @Override
     public Command update(Mouse mouse) {
-        float contentScale = contentLength / viewportLength;
+        float contentScale = currContentLength / viewportLength;
+        
+        if(initialUpdate) {
+            slider.yPos = bounds.yPos + Math.abs(slider.height - bounds.height);
+            initialUpdate = false;
+        }
         
         if(contentScale <= 1) {
             slider.height = bounds.height;
@@ -85,9 +92,19 @@ public class ScrollBar extends Control {
             }
             
             prevCursorChange = mouse.cursorPos.y;
+            
+            /*
+            Included this hack just in case the slider manages to extend beyond 
+            the top of the scroll bar when a group is collapsed.
+            */
+            if(prevContentLength != currContentLength) {
+                if(slider.yPos + slider.height > bounds.yPos + bounds.height) {
+                    slider.yPos = bounds.yPos + Math.abs(slider.height - bounds.height);
+                }
+            }
         }
         
-        float scaleFactor = ((contentLength / slider.height) / contentScale);
+        float scaleFactor = ((currContentLength / slider.height) / contentScale);
         float excess      = viewportLength - 28;
         
         contentOffset = (((slider.yPos + slider.height) - (bounds.yPos + bounds.height)) * scaleFactor) - excess;
@@ -129,15 +146,17 @@ public class ScrollBar extends Control {
     }
     
     public void setContentLength(Map<Integer, Float> groupLengths) {
-        contentLength = 0;
+        prevContentLength = currContentLength;
+        currContentLength = 0;
         
         groupLengths.forEach((index, memberLength) -> {
-            contentLength += memberLength;
+            currContentLength += memberLength;
         });
     }
     
     public void setContentLength(float length) {
-        contentLength = length;
+        prevContentLength = currContentLength;
+        currContentLength = length;
     }
     
     public int getContentScrollOffset() {

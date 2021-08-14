@@ -52,12 +52,13 @@ public class TreeView extends Control {
             group.update(mouse);
             
             /*
-            TODO: mostly works now, still needs a couple things though:
-              - if a group is opened near the top it is possible to overextend 
-                the scrollbar slider
+            TODO:
+              - Add selectable members/groups
             
-              - offset scrollbar slider and content to be at the top of the 
-                list when first opened.
+              - disable selection and interaction with members that
+                fall outside of the viewport
+            
+              - create a scissor box around the viewport
             */
             
             verticalOffset -= 28 * group.getLength();
