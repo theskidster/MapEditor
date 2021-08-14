@@ -32,6 +32,12 @@ public class TreeView extends Control {
         this.scrollBar = scrollBar;
         this.groups    = groups;
         
+        /*
+        TODO: remove stand alone scrollbars and let the objects that need them 
+              determine their position
+        */
+        scrollBar.bounds.xPos = bounds.xPos + bounds.width - 15;
+        
         associateTreeGroups();
     }
     
@@ -44,7 +50,6 @@ public class TreeView extends Control {
         
         int verticalOffset = scrollBar.getContentScrollOffset();
         
-        //for(int i = groups.length - 1; i > -1; i--) {
         for(int i = 0; i < groups.length; i++) {
             TreeGroup group = groups[i];
             
@@ -53,6 +58,9 @@ public class TreeView extends Control {
             
             /*
             TODO:
+              - offset the position of the slider whenever its resized so things
+                arent so jittery
+            
               - Add selectable members/groups
             
               - disable selection and interaction with members that

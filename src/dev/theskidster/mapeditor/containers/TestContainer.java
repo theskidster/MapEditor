@@ -33,6 +33,7 @@ public final class TestContainer extends Container {
             put(0, new GameObject("object 1"));
             put(1, new GameObject("object 2"));
             put(2, new GameObject("object 3"));
+            put(3, new GameObject("object 4"));
         }};
         
         var objects2 = new HashMap<Integer, GameObject>() {{
@@ -45,13 +46,19 @@ public final class TestContainer extends Container {
             put(6, new GameObject("object 7"));
         }};
         
-        TreeGroup[] groups = new TreeGroup[3];
-        groups[0] = new TreeGroup("Group 1", 0, objects2);
-        groups[1] = new TreeGroup("Group 2", 1, objects1);
-        groups[2] = new TreeGroup("Group 3", 2, objects1);
+        var objects3 = new HashMap<Integer, GameObject>() {{
+            put(0, new GameObject("object 1"));
+            put(1, new GameObject("object 2"));
+            put(2, new GameObject("object 3"));
+        }};
         
-        scrollBar = new ScrollBar(230, 15, 170, 65);
-        treeView  = new TreeView(15, 15, 200, 65, scrollBar, groups);
+        TreeGroup[] groups = new TreeGroup[3];
+        groups[0] = new TreeGroup("Group 1", 0, objects1);
+        groups[1] = new TreeGroup("Group 2", 1, objects2);
+        groups[2] = new TreeGroup("Group 3", 2, objects3);
+        
+        scrollBar = new ScrollBar(230, 15, 200, 200);
+        treeView  = new TreeView(15, 15, 200, 200, scrollBar, groups);
         
         controls = new ArrayList<>() {{
             add(treeView);
