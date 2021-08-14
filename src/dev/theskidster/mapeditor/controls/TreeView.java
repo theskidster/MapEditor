@@ -44,13 +44,23 @@ public class TreeView extends Control {
         
         int verticalOffset = scrollBar.getContentScrollOffset();
         
-        for(int i = groups.length - 1; i > -1; i--) {
+        //for(int i = groups.length - 1; i > -1; i--) {
+        for(int i = 0; i < groups.length; i++) {
             TreeGroup group = groups[i];
             
             group.setVerticalOffset(verticalOffset);
             group.update(mouse);
             
-            verticalOffset += 28 * group.getLength();
+            /*
+            TODO: mostly works now, still needs a couple things though:
+              - if a group is opened near the top it is possible to overextend 
+                the scrollbar slider
+            
+              - offset scrollbar slider and content to be at the top of the 
+                list when first opened.
+            */
+            
+            verticalOffset -= 28 * group.getLength();
             groupLengths.put(i, 28f * group.getLength());
         }
         

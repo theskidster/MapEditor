@@ -88,8 +88,9 @@ public class ScrollBar extends Control {
         }
         
         float scaleFactor = ((contentLength / slider.height) / contentScale);
+        float excess      = viewportLength - 28;
         
-        contentOffset = (slider.yPos - bounds.yPos) * scaleFactor;
+        contentOffset = (((slider.yPos + slider.height) - (bounds.yPos + bounds.height)) * scaleFactor) - excess;
         sliderOffsetY = (slider.yPos - bounds.yPos);
         
         topBtnColor = (topBtn.contains(mouse.cursorPos)) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY;

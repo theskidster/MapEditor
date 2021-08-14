@@ -29,19 +29,26 @@ public final class TestContainer extends Container {
     public TestContainer(int xPos, int yPos) {
         super((xPos / 3f) - 250, (yPos / 2) - 100, 360, 400, "Title", 1, 5);
         
-        var objects = new HashMap<Integer, GameObject>() {{
+        var objects1 = new HashMap<Integer, GameObject>() {{
             put(0, new GameObject("object 1"));
             put(1, new GameObject("object 2"));
             put(2, new GameObject("object 3"));
         }};
         
-        TreeGroup[] groups = new TreeGroup[3];
-        groups[0] = new TreeGroup("Group 1", 0, objects);
-        groups[1] = new TreeGroup("Group 2", 1, objects);
-        groups[2] = new TreeGroup("Group 3", 2, objects);
+        var objects2 = new HashMap<Integer, GameObject>() {{
+            put(0, new GameObject("object 1"));
+            put(1, new GameObject("object 2"));
+            put(2, new GameObject("object 3"));
+            put(3, new GameObject("object 4"));
+        }};
         
-        scrollBar = new ScrollBar(230, 15, 170, 42);
-        treeView  = new TreeView(15, 15, 200, 42, scrollBar, groups);
+        TreeGroup[] groups = new TreeGroup[3];
+        groups[0] = new TreeGroup("Group 1", 0, objects1);
+        groups[1] = new TreeGroup("Group 2", 1, objects2);
+        groups[2] = new TreeGroup("Group 3", 2, objects1);
+        
+        scrollBar = new ScrollBar(230, 15, 170, 65);
+        treeView  = new TreeView(15, 15, 200, 65, scrollBar, groups);
         
         controls = new ArrayList<>() {{
             add(treeView);
