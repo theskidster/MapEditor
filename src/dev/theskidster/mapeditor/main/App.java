@@ -98,6 +98,9 @@ public final class App {
         glfwMakeContextCurrent(window.handle);
         GL.createCapabilities();
         
+        //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        
         //Log system info.
         JLogger.newHorizontalLine();
         JLogger.logInfo("OS NAME:\t\t" + System.getProperty("os.name"));

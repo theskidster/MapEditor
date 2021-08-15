@@ -68,6 +68,8 @@ final class Window implements PropertyChangeListener {
         
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         
         if(maximized) {
             glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
@@ -124,6 +126,10 @@ final class Window implements PropertyChangeListener {
         glfwShowWindow(handle);
         
         ui.configure(width, height);
+        
+        glfwSetErrorCallback((error, description) -> {
+            System.out.println(error + ": " + description);
+        });
         
         glfwSetWindowPosCallback(handle, (window, xpos, ypos) -> {
             xPos = xpos;
