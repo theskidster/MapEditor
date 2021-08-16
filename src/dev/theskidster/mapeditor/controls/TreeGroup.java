@@ -27,11 +27,12 @@ public class TreeGroup extends Control {
     private float verticalOffset;
     private float parentPosY;
     
+    private boolean selected;
     private boolean collapsed = true;
     
     final String name;
     private final Icon arrowIcon; 
-    private final Rectangle arrowBounds; 
+    private final Rectangle arrowBounds;
     private TreeView treeView;
     private Color fontColor;
     private Color bgColor = Color.random();
@@ -66,6 +67,20 @@ public class TreeGroup extends Control {
         arrowBounds.yPos = bounds.yPos + 6;
         
         arrowIcon.position.set(arrowBounds.xPos - 2, arrowBounds.yPos - 2);
+        arrowIcon.setColor(fontColor);
+        
+        if(clickedOnce(bounds, mouse) && !arrowBounds.contains(mouse.cursorPos) && mouse.button.equals("left")) {
+            treeView.currGroupIndex = index;
+            treeView.selectedObject = null;
+            selected = true;
+        }
+        
+        if(index == treeView.currGroupIndex) {
+            fontColor = Color.YELLOW;
+        } else {
+            fontColor = Color.UI_WHITE; 
+            selected  = false;
+        }
         
         if(clickedOnce(arrowBounds, mouse) && mouse.button.equals("left")) {
             toggleCollapsed();
@@ -85,9 +100,11 @@ public class TreeGroup extends Control {
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        //background.drawRectangle(bounds, bgColor, uiProgram);
+        if(selected) {
+            background.drawRectangle(bounds, Color.UI_MEDIUM_GRAY, uiProgram);
+        }
+        
         font.drawString(name, bounds.xPos + 28, bounds.yPos + 8, fontColor, uiProgram);
-        //background.drawRectangle(arrowBounds, Color.UI_BLUE, uiProgram);
         arrowIcon.render(uiProgram);
     }
 

@@ -20,6 +20,10 @@ import java.util.Map;
  */
 public class TreeView extends Control {
 
+    int currGroupIndex = -1;
+    
+    public Object selectedObject;
+    
     Observable observable = new Observable(this);
     
     private final ScrollBar scrollBar;
