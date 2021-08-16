@@ -9,6 +9,8 @@ import dev.theskidster.mapeditor.main.Mouse;
 import dev.theskidster.mapeditor.scene.GameObject;
 import dev.theskidster.mapeditor.utils.Rectangle;
 import dev.theskidster.shadercore.GLProgram;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /*
@@ -35,9 +37,9 @@ public class TreeGroup extends Control {
     private final Rectangle arrowBounds;
     private TreeView treeView;
     private Color fontColor;
-    private Color bgColor = Color.random();
     
     private Map<Integer, GameObject> gameObjects;
+    private Map<Integer, TreeMember> members = new HashMap<>();
     
     public TreeGroup(String name, int index, Map<Integer, GameObject> gameObjects) {
         super(0, 0, 0, 28);
@@ -73,10 +75,15 @@ public class TreeGroup extends Control {
             treeView.currGroupIndex = index;
             treeView.selectedObject = null;
             selected = true;
+            members.values().forEach(member -> member.selected = false);
         }
         
         if(index == treeView.currGroupIndex) {
             fontColor = Color.YELLOW;
+            
+            if(members.values().stream().anyMatch(member -> member.selected)) {
+                selected = false;
+            }
         } else {
             fontColor = Color.UI_WHITE; 
             selected  = false;
@@ -90,7 +97,22 @@ public class TreeGroup extends Control {
         else          arrowIcon.setSubImage(5, 0);
         
         if(!collapsed) {
-            length = gameObjects.size();
+            length = gameObjects.size() + 1;
+            
+            if(length > 1) {
+                int order = 0;
+                
+                for(int i = 0; i <= Collections.max(gameObjects.keySet()); i++)  {
+                    if(gameObjects.containsKey(i)) {
+                        order++;
+                        
+                        if(members.containsKey(i)) members.get(i).update(gameObjects.get(i), bounds, order, mouse, treeView);
+                        else                       members.put(i, new TreeMember(index));
+                    }
+                }
+            }
+            
+            //members.entrySet().removeIf(entry -> !gameObjects.containsKey(entry.getKey()));
         } else {
             length = 1;
         }
@@ -106,6 +128,10 @@ public class TreeGroup extends Control {
         
         font.drawString(name, bounds.xPos + 28, bounds.yPos + 8, fontColor, uiProgram);
         arrowIcon.render(uiProgram);
+        
+        if(!collapsed) {
+            members.values().forEach(member -> member.render(uiProgram, background, font, fontColor));
+        }
     }
 
     @Override

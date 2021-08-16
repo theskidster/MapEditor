@@ -5,6 +5,7 @@ import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.graphics.Color;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
+import dev.theskidster.mapeditor.scene.GameObject;
 import dev.theskidster.mapeditor.utils.Observable;
 import dev.theskidster.shadercore.GLProgram;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class TreeView extends Control {
 
     int currGroupIndex = -1;
     
-    public Object selectedObject;
+    public GameObject selectedObject;
     
     Observable observable = new Observable(this);
     
