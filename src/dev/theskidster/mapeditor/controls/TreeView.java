@@ -56,7 +56,6 @@ public class TreeView extends Control {
 
     @Override
     public Command update(Mouse mouse) {
-        
         int verticalOffset = scrollBar.getContentScrollOffset();
         
         for(int i = 0; i < groups.length; i++) {

@@ -30,6 +30,7 @@ public class ScrollBar extends Control {
     
     public boolean parentHovered;
     private boolean initialUpdate = true;
+    private boolean visible;
     
     private final Rectangle topBtn;
     private final Rectangle slider;
@@ -77,15 +78,16 @@ public class ScrollBar extends Control {
         if(contentScale <= 1) {
             slider.height = bounds.height;
             slider.yPos   = bounds.yPos;
-            //TODO: hide when its useless
+            visible       = false;
         } else {
+            visible      = true;
             float change = 0;
             slider.height = bounds.height / contentScale;
             
             if(slider.contains(mouse.cursorPos) && mouse.clicked && mouse.button.equals("left")) {
                 change = mouse.cursorPos.y - prevCursorChange;
                 scroll(change);
-            } else if(parentHovered && mouse.scrolled) {
+            } else if(parentHovered && mouse.scrolled || bounds.contains(mouse.cursorPos) && mouse.scrolled) {
                 change = mouse.scrollValue * 5;
                 scroll(change);
             } else if(topBtn.contains(mouse.cursorPos) && mouse.clicked && mouse.button.equals("left")) {
@@ -130,13 +132,15 @@ public class ScrollBar extends Control {
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
-        background.drawRectangle(topBtn, topBtnColor, uiProgram);
-        background.drawRectangle(slider, sliderColor, uiProgram);
-        background.drawRectangle(botBtn, botBtnColor, uiProgram);
-        
-        topIcon.render(uiProgram);
-        botIcon.render(uiProgram);
+        if(visible) {
+            background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
+            background.drawRectangle(topBtn, topBtnColor, uiProgram);
+            background.drawRectangle(slider, sliderColor, uiProgram);
+            background.drawRectangle(botBtn, botBtnColor, uiProgram);
+            
+            topIcon.render(uiProgram);
+            botIcon.render(uiProgram);
+        }
     }
 
     @Override
