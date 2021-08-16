@@ -23,6 +23,7 @@ class TreeMember {
     
     boolean selected;
     
+    private Color fontColor = Color.UI_WHITE;
     private final Icon icon = new Icon(20, 20, 0, 1);
     final Rectangle bounds   = new Rectangle(0, 0, 0, 28);
     
@@ -40,24 +41,26 @@ class TreeMember {
         bounds.width = treeView.bounds.width;
         
         icon.position.set(bounds.xPos + 34, bounds.yPos + 4);
+        icon.setColor(fontColor);
         
-        if(bounds.contains(mouse.cursorPos) && mouse.clicked && mouse.button.equals("left")) {
+        if(bounds.contains(mouse.cursorPos) && mouse.clicked && 
+           mouse.button.equals("left") && treeView.bounds.contains(mouse.cursorPos)) {
             treeView.currGroupIndex = groupIndex;
             treeView.selectedObject = gameObject;
             selected = true;
         }
         
-        selected = (gameObject == treeView.selectedObject);
+        selected  = (gameObject == treeView.selectedObject);
+        fontColor = (selected) ? Color.YELLOW : Color.UI_WHITE;
         
         //TODO: change icon sub image
     }
     
-    void render(GLProgram uiProgram, Background background, Font font, Color fontColor) {
+    void render(GLProgram uiProgram, Background background, Font font) {
         if(gameObject != null) {
             if(selected) background.drawRectangle(bounds, Color.UI_MEDIUM_GRAY, uiProgram);
             
             font.drawString(gameObject.getName(), bounds.xPos + 61, bounds.yPos + 8, fontColor, uiProgram);
-            icon.setColor(fontColor);
             icon.render(uiProgram);
         }
     }

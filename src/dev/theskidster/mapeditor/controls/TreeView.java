@@ -10,6 +10,10 @@ import dev.theskidster.mapeditor.utils.Observable;
 import dev.theskidster.shadercore.GLProgram;
 import java.util.HashMap;
 import java.util.Map;
+import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glScissor;
 
 /**
  * Created: Aug 10, 2021
@@ -61,16 +65,6 @@ public class TreeView extends Control {
             group.setVerticalOffset(verticalOffset);
             group.update(mouse);
             
-            /*
-            TODO:            
-              - Add selectable members/groups
-            
-              - disable selection and interaction with members that
-                fall outside of the viewport
-            
-              - create a scissor box around the viewport
-            */
-            
             verticalOffset -= 28 * group.getLength();
             groupLengths.put(i, 28f * group.getLength());
         }
@@ -86,10 +80,12 @@ public class TreeView extends Control {
     public void render(GLProgram uiProgram, Background background, Font font) {
         background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
         
-        for(TreeGroup group : groups) group.render(uiProgram, background, font);
+        glEnable(GL_SCISSOR_TEST);
+        glScissor((int) bounds.xPos, (int) bounds.yPos, (int) bounds.width, (int) bounds.height);
+            for(TreeGroup group : groups) group.render(uiProgram, background, font);
+        glDisable(GL_SCISSOR_TEST);
         
         scrollBar.render(uiProgram, background, font);
-        
     }
 
     @Override

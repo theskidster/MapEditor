@@ -71,7 +71,8 @@ public class TreeGroup extends Control {
         arrowIcon.position.set(arrowBounds.xPos - 2, arrowBounds.yPos - 2);
         arrowIcon.setColor(fontColor);
         
-        if(clickedOnce(bounds, mouse) && !arrowBounds.contains(mouse.cursorPos) && mouse.button.equals("left")) {
+        if(clickedOnce(bounds, mouse) && !arrowBounds.contains(mouse.cursorPos) && 
+           mouse.button.equals("left") && treeView.bounds.contains(mouse.cursorPos)) {
             treeView.currGroupIndex = index;
             treeView.selectedObject = null;
             selected = true;
@@ -112,7 +113,7 @@ public class TreeGroup extends Control {
                 }
             }
             
-            //members.entrySet().removeIf(entry -> !gameObjects.containsKey(entry.getKey()));
+            members.entrySet().removeIf(entry -> !gameObjects.containsKey(entry.getKey()));
         } else {
             length = 1;
         }
@@ -130,7 +131,7 @@ public class TreeGroup extends Control {
         arrowIcon.render(uiProgram);
         
         if(!collapsed) {
-            members.values().forEach(member -> member.render(uiProgram, background, font, fontColor));
+            members.values().forEach(member -> member.render(uiProgram, background, font));
         }
     }
 
