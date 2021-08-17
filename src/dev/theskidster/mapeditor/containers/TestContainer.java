@@ -1,6 +1,7 @@
 package dev.theskidster.mapeditor.containers;
 
 import dev.theskidster.mapeditor.commands.Command;
+import dev.theskidster.mapeditor.controls.CheckBox;
 import dev.theskidster.mapeditor.controls.ScrollBar;
 import dev.theskidster.mapeditor.controls.TreeGroup;
 import dev.theskidster.mapeditor.controls.TreeView;
@@ -25,6 +26,7 @@ public final class TestContainer extends Container {
     
     TreeView treeView;
     ScrollBar scrollBar;
+    CheckBox checkBox;
     
     public TestContainer(int xPos, int yPos) {
         super((xPos / 3f) - 250, (yPos / 2) - 100, 360, 400, "Title", 1, 5);
@@ -59,9 +61,11 @@ public final class TestContainer extends Container {
         
         scrollBar = new ScrollBar(217, 15, 200, 200);
         treeView  = new TreeView(15, 15, 200, 200, scrollBar, groups);
+        checkBox  = new CheckBox(40, 250, false);
         
         controls = new ArrayList<>() {{
             add(treeView);
+            add(checkBox);
             //add(scrollBar);
         }};
     }

@@ -58,7 +58,7 @@ class TreeMember {
     
     void render(GLProgram uiProgram, Background background, Font font) {
         if(gameObject != null) {
-            if(selected) background.drawRectangle(bounds, Color.UI_MEDIUM_GRAY, uiProgram);
+            if(selected) background.drawRectangle(bounds, Color.UI_BLUE, uiProgram);
             
             font.drawString(gameObject.getName(), bounds.xPos + 61, bounds.yPos + 8, fontColor, uiProgram);
             icon.render(uiProgram);

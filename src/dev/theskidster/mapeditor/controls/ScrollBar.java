@@ -30,7 +30,6 @@ public class ScrollBar extends Control {
     
     public boolean parentHovered;
     private boolean initialUpdate = true;
-    private boolean visible;
     
     private final Rectangle topBtn;
     private final Rectangle slider;
@@ -78,9 +77,7 @@ public class ScrollBar extends Control {
         if(contentScale <= 1) {
             slider.height = bounds.height;
             slider.yPos   = bounds.yPos;
-            visible       = false;
         } else {
-            visible      = true;
             float change = 0;
             slider.height = bounds.height / contentScale;
             
@@ -123,24 +120,32 @@ public class ScrollBar extends Control {
         contentOffset = (((slider.yPos + slider.height) - (bounds.yPos + bounds.height)) * scaleFactor) - excess;
         sliderOffsetY = (slider.yPos - bounds.yPos);
         
-        topBtnColor = (topBtn.contains(mouse.cursorPos)) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY;
         sliderColor = (slider.contains(mouse.cursorPos)) ? Color.UI_LIGHT_GRAY : Color.UI_MEDIUM_GRAY;
-        botBtnColor = (botBtn.contains(mouse.cursorPos)) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY;
+        
+        if(topBtn.contains(mouse.cursorPos) && mouse.clicked && mouse.button.equals("left")) {
+            topBtnColor = Color.UI_LIGHT_GRAY;
+        } else {
+            topBtnColor = (topBtn.contains(mouse.cursorPos)) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY;
+        }
+        
+        if(botBtn.contains(mouse.cursorPos) && mouse.clicked && mouse.button.equals("left")) {
+            botBtnColor = Color.UI_LIGHT_GRAY;
+        } else {
+            botBtnColor = (botBtn.contains(mouse.cursorPos)) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY;
+        }
         
         return null;
     }
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        if(visible) {
-            background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
-            background.drawRectangle(topBtn, topBtnColor, uiProgram);
-            background.drawRectangle(slider, sliderColor, uiProgram);
-            background.drawRectangle(botBtn, botBtnColor, uiProgram);
-            
-            topIcon.render(uiProgram);
-            botIcon.render(uiProgram);
-        }
+        background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
+        background.drawRectangle(topBtn, topBtnColor, uiProgram);
+        background.drawRectangle(slider, sliderColor, uiProgram);
+        background.drawRectangle(botBtn, botBtnColor, uiProgram);
+        
+        topIcon.render(uiProgram);
+        botIcon.render(uiProgram);
     }
 
     @Override

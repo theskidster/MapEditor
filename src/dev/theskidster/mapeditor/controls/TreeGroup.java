@@ -124,7 +124,7 @@ public class TreeGroup extends Control {
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
         if(selected) {
-            background.drawRectangle(bounds, Color.UI_MEDIUM_GRAY, uiProgram);
+            background.drawRectangle(bounds, Color.UI_BLUE, uiProgram);
         }
         
         font.drawString(name, bounds.xPos + 28, bounds.yPos + 8, fontColor, uiProgram);
