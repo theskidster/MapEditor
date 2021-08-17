@@ -24,6 +24,7 @@ public abstract class Control {
     private final boolean[] prevClicked = new boolean[2];
     private final boolean[] currClicked = new boolean[2];
     protected boolean remove;
+    public boolean disabled;
     
     protected final Rectangle bounds;
     

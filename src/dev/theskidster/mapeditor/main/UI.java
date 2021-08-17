@@ -4,7 +4,6 @@ import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.commands.CommandHistory;
 import dev.theskidster.mapeditor.containers.Container;
 import dev.theskidster.mapeditor.containers.SceneExplorer;
-import dev.theskidster.mapeditor.containers.TestContainer;
 import dev.theskidster.mapeditor.graphics.Background;
 import dev.theskidster.mapeditor.scene.Scene;
 import dev.theskidster.mapeditor.utils.TextInput;
@@ -107,7 +106,7 @@ public final class UI {
     }
     
     void captureKeyInput(int key, int action) {
-        if(textInput != null && textInput.hasFocus()) {
+        if(textInput != null && !textInput.disabled && textInput.hasFocus()) {
             textInput.processKeyInput(key, action);
         }
     }

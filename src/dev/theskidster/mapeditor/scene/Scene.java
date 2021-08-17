@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public final class Scene {
 
+    public GameObject selectedObject;
+    
     public final Map<Integer, GameObject> visibleGeometry = new HashMap<>();
     public final Map<Integer, GameObject> boundingVolumes = new HashMap<>();
     public final Map<Integer, GameObject> triggerBoxes    = new HashMap<>();

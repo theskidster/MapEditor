@@ -139,7 +139,7 @@ public class TextArea extends TextInput {
         if(caratTimer.finished()) caratIdle = true;
         if(App.tick(0, 18) && caratIdle) caratBlink = !caratBlink;
         
-        if(hovered(mouse.cursorPos)) {
+        if(hovered(mouse.cursorPos) && !disabled) {
             mouse.setCursorShape(GLFW_IBEAM_CURSOR);
             
             if((prevPressed != currPressed && !prevPressed)) {
@@ -211,7 +211,7 @@ public class TextArea extends TextInput {
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
         if(borderVisible) background.drawRectangle(outline, Color.UI_LIGHT_GRAY, uiProgram);
-        background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
+        background.drawRectangle(bounds, (disabled) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY, uiProgram);
         
         glEnable(GL_SCISSOR_TEST);
         glScissor((int) bounds.xPos, (int) bounds.yPos, (int) bounds.width, (int) bounds.height);

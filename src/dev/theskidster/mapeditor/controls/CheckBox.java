@@ -7,6 +7,7 @@ import dev.theskidster.mapeditor.graphics.Icon;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
 import dev.theskidster.shadercore.GLProgram;
+import static org.lwjgl.glfw.GLFW.GLFW_HAND_CURSOR;
 
 /**
  * Aug 16, 2021
@@ -34,8 +35,9 @@ public class CheckBox extends Control {
 
     @Override
     public Command update(Mouse mouse) {
-        if(clickedOnce(bounds, mouse)) {
-            value = !value;
+        if(!disabled) {
+            if(hovered(mouse.cursorPos))   mouse.setCursorShape(GLFW_HAND_CURSOR);
+            if(clickedOnce(bounds, mouse)) value = !value;
         }
         
         return null;
@@ -43,7 +45,7 @@ public class CheckBox extends Control {
 
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
-        background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
+        background.drawRectangle(bounds, (disabled) ? Color.UI_MEDIUM_GRAY : Color.UI_SLATE_GRAY, uiProgram);
         iconBox.render(uiProgram);
         if(value) iconCheck.render(uiProgram);
     }
@@ -57,11 +59,11 @@ public class CheckBox extends Control {
         iconCheck.position.set(bounds.xPos + 1, bounds.yPos + 2);
     }
     
-    void setValue(boolean value) {
+    public void setValue(boolean value) {
         this.value = value;
     }
     
-    boolean getValue(boolean value) {
+    public boolean getValue() {
         return value;
     }
     

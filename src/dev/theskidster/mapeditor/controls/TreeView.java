@@ -8,6 +8,7 @@ import dev.theskidster.mapeditor.main.Mouse;
 import dev.theskidster.mapeditor.scene.GameObject;
 import dev.theskidster.mapeditor.utils.Observable;
 import dev.theskidster.shadercore.GLProgram;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
@@ -29,14 +30,14 @@ public class TreeView extends Control {
     
     public GameObject selectedObject;
     
-    Observable observable = new Observable(this);
+    private Observable observable = new Observable(this);
     
     private final ScrollBar scrollBar;
     private final TreeGroup[] groups;
     
     private final Map<Integer, Float> groupLengths = new HashMap<>();
     
-    public TreeView(float xPos, float yPos, float width, float height, ScrollBar scrollBar, TreeGroup[] groups) {
+    public TreeView(float xPos, float yPos, float width, float height, ScrollBar scrollBar, TreeGroup[] groups, PropertyChangeListener observer) {
         super(xPos, yPos, width, height);
         this.scrollBar = scrollBar;
         this.groups    = groups;
@@ -48,6 +49,10 @@ public class TreeView extends Control {
         scrollBar.bounds.xPos = bounds.xPos + bounds.width - 15;
         
         associateTreeGroups();
+        
+        observable.properties.put("gameObject", null);
+        
+        observable.addObserver(observer);
     }
     
     final void associateTreeGroups() {
@@ -67,6 +72,8 @@ public class TreeView extends Control {
             verticalOffset -= 28 * group.getLength();
             groupLengths.put(i, 28f * group.getLength());
         }
+        
+        observable.notifyObservers("gameObject", selectedObject);
         
         scrollBar.setContentLength(groupLengths);
         scrollBar.parentHovered = hovered(mouse.cursorPos);
@@ -96,5 +103,5 @@ public class TreeView extends Control {
         
         scrollBar.relocate(parentPosX, parentPosY);
     }
-
+    
 }

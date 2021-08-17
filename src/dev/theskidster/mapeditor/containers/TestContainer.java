@@ -10,6 +10,8 @@ import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
 import dev.theskidster.mapeditor.scene.GameObject;
 import dev.theskidster.shadercore.GLProgram;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
@@ -22,7 +24,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
  * @author J Hoffman
  * @since  
  */
-public final class TestContainer extends Container {
+public final class TestContainer extends Container implements PropertyChangeListener {
     
     TreeView treeView;
     ScrollBar scrollBar;
@@ -60,7 +62,7 @@ public final class TestContainer extends Container {
         groups[2] = new TreeGroup("Group 3", 2, objects3);
         
         scrollBar = new ScrollBar(217, 15, 200, 200);
-        treeView  = new TreeView(15, 15, 200, 200, scrollBar, groups);
+        treeView  = new TreeView(15, 15, 200, 200, scrollBar, groups, this);
         checkBox  = new CheckBox(40, 250, false);
         
         controls = new ArrayList<>() {{
@@ -89,6 +91,11 @@ public final class TestContainer extends Container {
     @Override
     protected void relocateAdjunct(float windowWidth, float windowHeight) {
         controls.forEach(control -> control.relocate(bounds.xPos, bounds.yPos));
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
