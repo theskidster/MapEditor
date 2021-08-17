@@ -104,4 +104,8 @@ public class TreeView extends Control {
         scrollBar.relocate(parentPosX, parentPosY);
     }
     
+    public int getCurrGroupIndex() {
+        return currGroupIndex;
+    }
+    
 }

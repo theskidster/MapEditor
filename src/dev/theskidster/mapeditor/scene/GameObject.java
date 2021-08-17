@@ -19,7 +19,7 @@ public class GameObject {
     
     public GameObject(String name) {
         index     = indexLimit++;
-        this.name = name;
+        this.name = (name.equals("World Light") ? name : name + " (" + index + ")");
     }
     
     public boolean getHidden() {

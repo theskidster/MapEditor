@@ -156,4 +156,8 @@ public class TreeGroup extends Control {
         collapsed = !collapsed;
     }
     
+    public void setCollapsed(boolean collapsed) {
+        this.collapsed = collapsed;
+    }
+    
 }

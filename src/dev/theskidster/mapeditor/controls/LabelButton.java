@@ -93,5 +93,9 @@ public class LabelButton extends Control {
         
         textPos.set(bounds.xPos + 15, bounds.yPos + 8);
     }
+    
+    public boolean clickedOnce(Mouse mouse) {
+        return clickedOnce(bounds, mouse);
+    }
 
 }

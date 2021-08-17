@@ -1,6 +1,8 @@
 package dev.theskidster.mapeditor.containers;
 
 import dev.theskidster.mapeditor.commands.Command;
+import dev.theskidster.mapeditor.commands.CreateGameObject;
+import dev.theskidster.mapeditor.commands.DeleteGameObject;
 import dev.theskidster.mapeditor.controls.CheckBox;
 import dev.theskidster.mapeditor.controls.LabelButton;
 import dev.theskidster.mapeditor.controls.ScrollBar;
@@ -13,7 +15,7 @@ import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
 import dev.theskidster.mapeditor.scene.GameObject;
 import dev.theskidster.mapeditor.scene.Scene;
-import dev.theskidster.mapeditor.utils.Rectangle;
+import dev.theskidster.mapeditor.scene.VisibleGeometry;
 import dev.theskidster.shadercore.GLProgram;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -39,11 +41,13 @@ public final class SceneExplorer extends Container implements PropertyChangeList
     private TextArea textArea;
     private CheckBox checkBox;
     
+    TreeGroup[] groups;
+    
     public SceneExplorer(float xPos, float yPos, Scene scene) {
         super(xPos, yPos, 360, 423, "Scene Explorer", 3, 4);
         this.scene = scene;
         
-        TreeGroup[] groups = {
+        groups = new TreeGroup[] {
             new TreeGroup("Visible Geometry", 0, scene.visibleGeometry),
             new TreeGroup("Bounding Volumes", 1, scene.boundingVolumes),
             new TreeGroup("Trigger Boxes",    2, scene.triggerBoxes),
@@ -69,12 +73,45 @@ public final class SceneExplorer extends Container implements PropertyChangeList
     }
 
     @Override
-    protected Command updateAdjunct(Mouse mouse) {        
+    protected Command updateAdjunct(Mouse mouse) {
         controls.forEach(control -> control.update(mouse));
         
         if(scene.selectedObject != null) {
             scene.selectedObject.setName(textArea.getText());
             scene.selectedObject.setHidden(checkBox.getValue());
+        } else {
+            textArea.disabled = true;
+            checkBox.disabled = true;
+        }
+        
+        if(addButton.clickedOnce(mouse) && treeView.getCurrGroupIndex() != -1) {
+            groups[treeView.getCurrGroupIndex()].setCollapsed(false);
+            
+            switch(treeView.getCurrGroupIndex()) {
+                default -> { return new CreateGameObject(scene.visibleGeometry, new VisibleGeometry()); }
+                case 1  -> { return new CreateGameObject(scene.boundingVolumes, new VisibleGeometry()); }
+                case 2  -> { return new CreateGameObject(scene.triggerBoxes,    new VisibleGeometry()); }
+                case 3  -> { return new CreateGameObject(scene.lightSources,    new VisibleGeometry()); }
+                case 4  -> { return new CreateGameObject(scene.entities,        new VisibleGeometry()); }
+                case 5  -> { return new CreateGameObject(scene.instances,       new VisibleGeometry()); }
+            }
+        }
+        
+        if(removeButton.clickedOnce(mouse) && treeView.getCurrGroupIndex() != -1 && 
+           scene.selectedObject != null && !scene.selectedObject.getName().equals("World Light")) {
+            textArea.setText("");
+            checkBox.setValue(false);
+            
+            treeView.selectedObject = null;
+            
+            switch(treeView.getCurrGroupIndex()) {
+                default -> { return new DeleteGameObject(scene.visibleGeometry, scene.selectedObject); }
+                case 1  -> { return new DeleteGameObject(scene.boundingVolumes, scene.selectedObject); }
+                case 2  -> { return new DeleteGameObject(scene.triggerBoxes,    scene.selectedObject); }
+                case 3  -> { return new DeleteGameObject(scene.lightSources,    scene.selectedObject); }
+                case 4  -> { return new DeleteGameObject(scene.entities,        scene.selectedObject); }
+                case 5  -> { return new DeleteGameObject(scene.instances,       scene.selectedObject); }
+            }
         }
         
         if(!controlHovered(mouse.cursorPos)) {
@@ -112,14 +149,18 @@ public final class SceneExplorer extends Container implements PropertyChangeList
                     GameObject selectedObject = (GameObject) evt.getNewValue();
                     scene.selectedObject      = selectedObject;
                     
+                    checkBox.disabled = false;
+                    checkBox.setValue(selectedObject.getHidden());
+                    
                     if(!selectedObject.getName().equals("World Light")) {
                         textArea.disabled = false;
-                        checkBox.disabled = false;
                         textArea.setText(selectedObject.getName());
-                        checkBox.setValue(selectedObject.getHidden());
+                    } else {
+                        textArea.disabled = true;
+                        textArea.setText(selectedObject.getName());
                     }
                 } else {
-                    if(!textArea.disabled) {
+                    if(scene.selectedObject != null) {
                         scene.selectedObject = null;
                         
                         textArea.setText("");
