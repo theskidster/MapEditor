@@ -3,12 +3,12 @@ package dev.theskidster.mapeditor.main;
 import dev.theskidster.mapeditor.commands.Command;
 import dev.theskidster.mapeditor.commands.CommandHistory;
 import dev.theskidster.mapeditor.containers.Container;
+import dev.theskidster.mapeditor.containers.SceneExplorer;
 import dev.theskidster.mapeditor.containers.TestContainer;
 import dev.theskidster.mapeditor.graphics.Background;
-import dev.theskidster.mapeditor.utils.Rectangle;
+import dev.theskidster.mapeditor.scene.Scene;
 import dev.theskidster.mapeditor.utils.TextInput;
 import dev.theskidster.shadercore.GLProgram;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import org.joml.Matrix4f;
 import static org.lwjgl.glfw.GLFW.GLFW_ARROW_CURSOR;
@@ -36,16 +36,15 @@ public final class UI {
     
     private final LinkedHashSet<Container> containers;
     
-    private final ArrayList<Rectangle> tabLayout = new ArrayList<>();
-    
-    UI(Window window, String fontFilename, int fontSize) {
+    UI(Window window, Scene scene, String fontFilename, int fontSize) {
         mouse   = new Mouse(window);
         menuBar = new MenuBar();
         
         setFont(fontFilename, fontSize);
         
         containers = new LinkedHashSet<>() {{
-            add(new TestContainer(window.getWidth(), window.getHeight()));
+            //add(new TestContainer(window.getWidth(), window.getHeight()));
+            add(new SceneExplorer(window.getWidth() / 2, window.getHeight() / 2, scene));
         }};
     }
     

@@ -3,6 +3,7 @@ package dev.theskidster.mapeditor.main;
 import dev.theskidster.jlogger.JLogger;
 import dev.theskidster.mapeditor.commands.CommandHistory;
 import dev.theskidster.mapeditor.graphics.Color;
+import dev.theskidster.mapeditor.scene.Scene;
 import dev.theskidster.shadercore.BufferType;
 import dev.theskidster.shadercore.GLProgram;
 import dev.theskidster.shadercore.Shader;
@@ -49,6 +50,7 @@ public final class App {
     private final GLProgram uiProgram;
     private final Camera camera;
     private final UI ui;
+    private final Scene scene;
     
     private final CommandHistory cmdHistory = new CommandHistory();
     
@@ -147,7 +149,8 @@ public final class App {
         }
         
         camera = new Camera();
-        ui     = new UI(window, fontFilename, fontSize);
+        scene  = new Scene("test");
+        ui     = new UI(window, scene, fontFilename, fontSize);
     }
     
     /**
