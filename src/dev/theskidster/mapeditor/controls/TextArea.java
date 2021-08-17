@@ -211,7 +211,7 @@ public class TextArea extends TextInput {
     @Override
     public void render(GLProgram uiProgram, Background background, Font font) {
         if(borderVisible) background.drawRectangle(outline, Color.UI_LIGHT_GRAY, uiProgram);
-        background.drawRectangle(bounds, Color.UI_MEDIUM_GRAY, uiProgram);
+        background.drawRectangle(bounds, Color.UI_SLATE_GRAY, uiProgram);
         
         glEnable(GL_SCISSOR_TEST);
         glScissor((int) bounds.xPos, (int) bounds.yPos, (int) bounds.width, (int) bounds.height);

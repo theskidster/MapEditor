@@ -9,6 +9,7 @@ import dev.theskidster.mapeditor.main.Mouse;
 import dev.theskidster.mapeditor.utils.Rectangle;
 import dev.theskidster.shadercore.GLProgram;
 import org.joml.Vector2f;
+import static org.lwjgl.glfw.GLFW.GLFW_HAND_CURSOR;
 
 /**
  * Created: Aug 10, 2021
@@ -56,6 +57,7 @@ public class LabelButton extends Control {
         }
         
         if(bounds.contains(mouse.cursorPos)) {
+            mouse.setCursorShape(GLFW_HAND_CURSOR);
             color = (mouse.clicked) ? Color.UI_CYAN : Color.UI_BLUE;
         } else {
             color = Color.UI_MEDIUM_GRAY;
@@ -75,7 +77,7 @@ public class LabelButton extends Control {
         iconLeft.render(uiProgram);
         iconRight.render(uiProgram);
         
-        font.drawString(text, textPos.x, textPos.y, Color.UI_WHITE, uiProgram);
+        font.drawString(text, (textPos.x + (middle.width / 2)) - (Font.getLengthInPixels(text) / 2), textPos.y, Color.UI_WHITE, uiProgram);
     }
 
     @Override
