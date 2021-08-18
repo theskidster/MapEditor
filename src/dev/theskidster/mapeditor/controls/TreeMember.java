@@ -6,6 +6,7 @@ import dev.theskidster.mapeditor.graphics.Icon;
 import dev.theskidster.mapeditor.main.Font;
 import dev.theskidster.mapeditor.main.Mouse;
 import dev.theskidster.mapeditor.scene.GameObject;
+import dev.theskidster.mapeditor.scene.VisibleGeometry;
 import dev.theskidster.mapeditor.utils.Rectangle;
 import dev.theskidster.shadercore.GLProgram;
 
@@ -22,9 +23,10 @@ class TreeMember {
     private final int groupIndex;
     
     boolean selected;
+    private boolean iconSet;
     
     private Color fontColor = Color.UI_WHITE;
-    private final Icon icon = new Icon(20, 20, 0, 1);
+    private final Icon icon = new Icon(20, 20);
     final Rectangle bounds   = new Rectangle(0, 0, 0, 28);
     
     GameObject gameObject;
@@ -53,7 +55,13 @@ class TreeMember {
         selected  = (gameObject == treeView.selectedObject);
         fontColor = (selected) ? Color.YELLOW : Color.UI_WHITE;
         
-        //TODO: change icon sub image
+        if(!iconSet) {
+            if(gameObject instanceof VisibleGeometry) {
+                icon.setSubImage(0, 1);
+            }
+            
+            iconSet = true;
+        }
     }
     
     void render(GLProgram uiProgram, Background background, Font font) {
